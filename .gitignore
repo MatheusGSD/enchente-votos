@@ -1,0 +1,8 @@
+# downloads públicos (TSE, IBGE, UFRGS, SPGG, SEMA): 1,4 GB, baixados de novo pelas fontes
+dados/
+
+__pycache__/
+*.pyc
+
+# trava do Office quando o pptx está aberto
+~$*

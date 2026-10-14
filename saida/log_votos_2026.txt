@@ -1,0 +1,5 @@
+2026 linhas de voto: 213540 | seções: 27547
+seções com voto: 27547 | aptos nas seções com voto: 8526233 de 8526233
+locais no RS: 7772 | sem coordenada: 57 (0.46% dos válidos)
+RS: {'lula': '35.73%', 'flavio': '55.64%'} | válidos: 6423299
+conferência Porto Alegre: {'lula': 377252, 'flavio': 325139, 'validos': 776811}

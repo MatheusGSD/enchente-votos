@@ -1,0 +1,1098 @@
+{
+  "total": {
+    "locais": 1252,
+    "aptos": 3008034,
+    "validos": 2226837,
+    "lula": 902029,
+    "flavio": 1113023,
+    "pct_lula": 40.51,
+    "pct_flavio": 49.98
+  },
+  "municipios_no_mapa": 42,
+  "criterios": {
+    "ada": {
+      "dentro": {
+        "locais": 153,
+        "aptos": 376091,
+        "validos": 273828,
+        "lula": 115127,
+        "flavio": 133463,
+        "pct_lula": 42.04,
+        "pct_flavio": 48.74
+      },
+      "fora": {
+        "locais": 1099,
+        "aptos": 2631943,
+        "validos": 1953009,
+        "lula": 786902,
+        "flavio": 979560,
+        "pct_lula": 40.29,
+        "pct_flavio": 50.16
+      }
+    },
+    "ada_500": {
+      "dentro": {
+        "locais": 375,
+        "aptos": 897651,
+        "validos": 663404,
+        "lula": 272073,
+        "flavio": 328168,
+        "pct_lula": 41.01,
+        "pct_flavio": 49.47
+      },
+      "fora": {
+        "locais": 877,
+        "aptos": 2110383,
+        "validos": 1563433,
+        "lula": 629956,
+        "flavio": 784855,
+        "pct_lula": 40.29,
+        "pct_flavio": 50.2
+      }
+    },
+    "spgg": {
+      "dentro": {
+        "locais": 147,
+        "aptos": 362737,
+        "validos": 263333,
+        "lula": 112080,
+        "flavio": 126954,
+        "pct_lula": 42.56,
+        "pct_flavio": 48.21
+      },
+      "fora": {
+        "locais": 1105,
+        "aptos": 2645297,
+        "validos": 1963504,
+        "lula": 789949,
+        "flavio": 986069,
+        "pct_lula": 40.23,
+        "pct_flavio": 50.22
+      }
+    },
+    "spgg_500": {
+      "dentro": {
+        "locais": 335,
+        "aptos": 812474,
+        "validos": 597126,
+        "lula": 249809,
+        "flavio": 290347,
+        "pct_lula": 41.84,
+        "pct_flavio": 48.62
+      },
+      "fora": {
+        "locais": 917,
+        "aptos": 2195560,
+        "validos": 1629711,
+        "lula": 652220,
+        "flavio": 822676,
+        "pct_lula": 40.02,
+        "pct_flavio": 50.48
+      }
+    }
+  },
+  "ponderado_populacao": {
+    "dentro": {
+      "validos_equivalentes": 319321,
+      "pct_lula": 41.19,
+      "pct_flavio": 49.51
+    },
+    "fora": {
+      "validos_equivalentes": 1907516,
+      "pct_lula": 40.39,
+      "pct_flavio": 50.06
+    },
+    "pop_alagada": 558861,
+    "pop_total": 3920649
+  },
+  "por_municipio": {
+    "Alvorada": {
+      "dentro": {
+        "locais": 1,
+        "aptos": 4384,
+        "validos": 2999,
+        "lula": 1333,
+        "flavio": 1415,
+        "pct_lula": 44.45,
+        "pct_flavio": 47.18
+      },
+      "fora": {
+        "locais": 43,
+        "aptos": 131665,
+        "validos": 94895,
+        "lula": 41172,
+        "flavio": 44719,
+        "pct_lula": 43.39,
+        "pct_flavio": 47.12
+      }
+    },
+    "Araricá": {
+      "dentro": {
+        "locais": 0,
+        "aptos": 0,
+        "validos": 0,
+        "lula": 0,
+        "flavio": 0
+      },
+      "fora": {
+        "locais": 7,
+        "aptos": 6417,
+        "validos": 5121,
+        "lula": 1410,
+        "flavio": 3382,
+        "pct_lula": 27.53,
+        "pct_flavio": 66.04
+      }
+    },
+    "Arroio dos Ratos": {
+      "dentro": {
+        "locais": 0,
+        "aptos": 0,
+        "validos": 0,
+        "lula": 0,
+        "flavio": 0
+      },
+      "fora": {
+        "locais": 5,
+        "aptos": 10266,
+        "validos": 7435,
+        "lula": 3526,
+        "flavio": 3267,
+        "pct_lula": 47.42,
+        "pct_flavio": 43.94
+      }
+    },
+    "Barra do Ribeiro": {
+      "dentro": {
+        "locais": 0,
+        "aptos": 0,
+        "validos": 0,
+        "lula": 0,
+        "flavio": 0
+      },
+      "fora": {
+        "locais": 5,
+        "aptos": 8397,
+        "validos": 6051,
+        "lula": 2304,
+        "flavio": 3195,
+        "pct_lula": 38.08,
+        "pct_flavio": 52.8
+      }
+    },
+    "Brochier": {
+      "dentro": {
+        "locais": 0,
+        "aptos": 0,
+        "validos": 0,
+        "lula": 0,
+        "flavio": 0
+      },
+      "fora": {
+        "locais": 3,
+        "aptos": 627,
+        "validos": 508,
+        "lula": 118,
+        "flavio": 316,
+        "pct_lula": 23.23,
+        "pct_flavio": 62.2
+      }
+    },
+    "Cachoeirinha": {
+      "dentro": {
+        "locais": 3,
+        "aptos": 6106,
+        "validos": 4537,
+        "lula": 1754,
+        "flavio": 2346,
+        "pct_lula": 38.66,
+        "pct_flavio": 51.71
+      },
+      "fora": {
+        "locais": 31,
+        "aptos": 96416,
+        "validos": 70880,
+        "lula": 24460,
+        "flavio": 38968,
+        "pct_lula": 34.51,
+        "pct_flavio": 54.98
+      }
+    },
+    "Campo Bom": {
+      "dentro": {
+        "locais": 2,
+        "aptos": 3300,
+        "validos": 2539,
+        "lula": 803,
+        "flavio": 1568,
+        "pct_lula": 31.63,
+        "pct_flavio": 61.76
+      },
+      "fora": {
+        "locais": 25,
+        "aptos": 48743,
+        "validos": 38223,
+        "lula": 9896,
+        "flavio": 25098,
+        "pct_lula": 25.89,
+        "pct_flavio": 65.66
+      }
+    },
+    "Canoas": {
+      "dentro": {
+        "locais": 37,
+        "aptos": 108101,
+        "validos": 77172,
+        "lula": 31216,
+        "flavio": 38202,
+        "pct_lula": 40.45,
+        "pct_flavio": 49.5
+      },
+      "fora": {
+        "locais": 54,
+        "aptos": 144774,
+        "validos": 108359,
+        "lula": 39559,
+        "flavio": 56932,
+        "pct_lula": 36.51,
+        "pct_flavio": 52.54
+      }
+    },
+    "Capela de Santana": {
+      "dentro": {
+        "locais": 0,
+        "aptos": 0,
+        "validos": 0,
+        "lula": 0,
+        "flavio": 0
+      },
+      "fora": {
+        "locais": 7,
+        "aptos": 8043,
+        "validos": 6268,
+        "lula": 2302,
+        "flavio": 3410,
+        "pct_lula": 36.73,
+        "pct_flavio": 54.4
+      }
+    },
+    "Charqueadas": {
+      "dentro": {
+        "locais": 3,
+        "aptos": 5139,
+        "validos": 3931,
+        "lula": 1844,
+        "flavio": 1726,
+        "pct_lula": 46.91,
+        "pct_flavio": 43.91
+      },
+      "fora": {
+        "locais": 9,
+        "aptos": 19160,
+        "validos": 14930,
+        "lula": 6958,
+        "flavio": 6494,
+        "pct_lula": 46.6,
+        "pct_flavio": 43.5
+      }
+    },
+    "Dois Irmãos": {
+      "dentro": {
+        "locais": 0,
+        "aptos": 0,
+        "validos": 0,
+        "lula": 0,
+        "flavio": 0
+      },
+      "fora": {
+        "locais": 20,
+        "aptos": 24809,
+        "validos": 20310,
+        "lula": 5131,
+        "flavio": 13314,
+        "pct_lula": 25.26,
+        "pct_flavio": 65.55
+      }
+    },
+    "Eldorado do Sul": {
+      "dentro": {
+        "locais": 9,
+        "aptos": 21841,
+        "validos": 15969,
+        "lula": 6751,
+        "flavio": 7777,
+        "pct_lula": 42.28,
+        "pct_flavio": 48.7
+      },
+      "fora": {
+        "locais": 5,
+        "aptos": 4998,
+        "validos": 3591,
+        "lula": 1508,
+        "flavio": 1782,
+        "pct_lula": 41.99,
+        "pct_flavio": 49.62
+      }
+    },
+    "Esteio": {
+      "dentro": {
+        "locais": 2,
+        "aptos": 4899,
+        "validos": 3512,
+        "lula": 1471,
+        "flavio": 1687,
+        "pct_lula": 41.88,
+        "pct_flavio": 48.04
+      },
+      "fora": {
+        "locais": 26,
+        "aptos": 61042,
+        "validos": 44634,
+        "lula": 18958,
+        "flavio": 21292,
+        "pct_lula": 42.47,
+        "pct_flavio": 47.7
+      }
+    },
+    "Estância Velha": {
+      "dentro": {
+        "locais": 0,
+        "aptos": 0,
+        "validos": 0,
+        "lula": 0,
+        "flavio": 0
+      },
+      "fora": {
+        "locais": 22,
+        "aptos": 37269,
+        "validos": 29144,
+        "lula": 6862,
+        "flavio": 19720,
+        "pct_lula": 23.55,
+        "pct_flavio": 67.66
+      }
+    },
+    "Glorinha": {
+      "dentro": {
+        "locais": 0,
+        "aptos": 0,
+        "validos": 0,
+        "lula": 0,
+        "flavio": 0
+      },
+      "fora": {
+        "locais": 6,
+        "aptos": 5471,
+        "validos": 4119,
+        "lula": 1012,
+        "flavio": 2730,
+        "pct_lula": 24.57,
+        "pct_flavio": 66.28
+      }
+    },
+    "Gravataí": {
+      "dentro": {
+        "locais": 2,
+        "aptos": 6172,
+        "validos": 4427,
+        "lula": 1318,
+        "flavio": 2595,
+        "pct_lula": 29.77,
+        "pct_flavio": 58.62
+      },
+      "fora": {
+        "locais": 75,
+        "aptos": 185931,
+        "validos": 136203,
+        "lula": 45919,
+        "flavio": 76029,
+        "pct_lula": 33.71,
+        "pct_flavio": 55.82
+      }
+    },
+    "Guaíba": {
+      "dentro": {
+        "locais": 8,
+        "aptos": 19011,
+        "validos": 13881,
+        "lula": 6145,
+        "flavio": 6337,
+        "pct_lula": 44.27,
+        "pct_flavio": 45.65
+      },
+      "fora": {
+        "locais": 27,
+        "aptos": 55565,
+        "validos": 41059,
+        "lula": 16977,
+        "flavio": 19802,
+        "pct_lula": 41.35,
+        "pct_flavio": 48.23
+      }
+    },
+    "Igrejinha": {
+      "dentro": {
+        "locais": 2,
+        "aptos": 4303,
+        "validos": 3467,
+        "lula": 965,
+        "flavio": 2230,
+        "pct_lula": 27.83,
+        "pct_flavio": 64.32
+      },
+      "fora": {
+        "locais": 9,
+        "aptos": 17434,
+        "validos": 14407,
+        "lula": 3483,
+        "flavio": 9817,
+        "pct_lula": 24.18,
+        "pct_flavio": 68.14
+      }
+    },
+    "Ivoti": {
+      "dentro": {
+        "locais": 1,
+        "aptos": 301,
+        "validos": 258,
+        "lula": 56,
+        "flavio": 185,
+        "pct_lula": 21.71,
+        "pct_flavio": 71.71
+      },
+      "fora": {
+        "locais": 11,
+        "aptos": 16200,
+        "validos": 13671,
+        "lula": 3122,
+        "flavio": 9091,
+        "pct_lula": 22.84,
+        "pct_flavio": 66.5
+      }
+    },
+    "Lindolfo Collor": {
+      "dentro": {
+        "locais": 1,
+        "aptos": 1337,
+        "validos": 1089,
+        "lula": 336,
+        "flavio": 657,
+        "pct_lula": 30.85,
+        "pct_flavio": 60.33
+      },
+      "fora": {
+        "locais": 4,
+        "aptos": 3348,
+        "validos": 2723,
+        "lula": 873,
+        "flavio": 1603,
+        "pct_lula": 32.06,
+        "pct_flavio": 58.87
+      }
+    },
+    "Maratá": {
+      "dentro": {
+        "locais": 0,
+        "aptos": 0,
+        "validos": 0,
+        "lula": 0,
+        "flavio": 0
+      },
+      "fora": {
+        "locais": 3,
+        "aptos": 605,
+        "validos": 521,
+        "lula": 100,
+        "flavio": 348,
+        "pct_lula": 19.19,
+        "pct_flavio": 66.79
+      }
+    },
+    "Mariana Pimentel": {
+      "dentro": {
+        "locais": 0,
+        "aptos": 0,
+        "validos": 0,
+        "lula": 0,
+        "flavio": 0
+      },
+      "fora": {
+        "locais": 1,
+        "aptos": 464,
+        "validos": 320,
+        "lula": 134,
+        "flavio": 167,
+        "pct_lula": 41.88,
+        "pct_flavio": 52.19
+      }
+    },
+    "Montenegro": {
+      "dentro": {
+        "locais": 5,
+        "aptos": 4724,
+        "validos": 3531,
+        "lula": 1088,
+        "flavio": 2100,
+        "pct_lula": 30.81,
+        "pct_flavio": 59.47
+      },
+      "fora": {
+        "locais": 38,
+        "aptos": 42892,
+        "validos": 31765,
+        "lula": 10488,
+        "flavio": 17996,
+        "pct_lula": 33.02,
+        "pct_flavio": 56.65
+      }
+    },
+    "Nova Hartz": {
+      "dentro": {
+        "locais": 0,
+        "aptos": 0,
+        "validos": 0,
+        "lula": 0,
+        "flavio": 0
+      },
+      "fora": {
+        "locais": 11,
+        "aptos": 14679,
+        "validos": 11877,
+        "lula": 3780,
+        "flavio": 7069,
+        "pct_lula": 31.83,
+        "pct_flavio": 59.52
+      }
+    },
+    "Nova Santa Rita": {
+      "dentro": {
+        "locais": 0,
+        "aptos": 0,
+        "validos": 0,
+        "lula": 0,
+        "flavio": 0
+      },
+      "fora": {
+        "locais": 12,
+        "aptos": 17834,
+        "validos": 13456,
+        "lula": 5147,
+        "flavio": 7153,
+        "pct_lula": 38.25,
+        "pct_flavio": 53.16
+      }
+    },
+    "Novo Hamburgo": {
+      "dentro": {
+        "locais": 3,
+        "aptos": 10393,
+        "validos": 7539,
+        "lula": 2660,
+        "flavio": 4407,
+        "pct_lula": 35.28,
+        "pct_flavio": 58.46
+      },
+      "fora": {
+        "locais": 50,
+        "aptos": 157849,
+        "validos": 120432,
+        "lula": 32509,
+        "flavio": 77334,
+        "pct_lula": 26.99,
+        "pct_flavio": 64.21
+      }
+    },
+    "Pareci Novo": {
+      "dentro": {
+        "locais": 0,
+        "aptos": 0,
+        "validos": 0,
+        "lula": 0,
+        "flavio": 0
+      },
+      "fora": {
+        "locais": 5,
+        "aptos": 3448,
+        "validos": 2802,
+        "lula": 497,
+        "flavio": 2036,
+        "pct_lula": 17.74,
+        "pct_flavio": 72.66
+      }
+    },
+    "Parobé": {
+      "dentro": {
+        "locais": 0,
+        "aptos": 0,
+        "validos": 0,
+        "lula": 0,
+        "flavio": 0
+      },
+      "fora": {
+        "locais": 26,
+        "aptos": 39042,
+        "validos": 31077,
+        "lula": 9300,
+        "flavio": 19437,
+        "pct_lula": 29.93,
+        "pct_flavio": 62.54
+      }
+    },
+    "Paverama": {
+      "dentro": {
+        "locais": 0,
+        "aptos": 0,
+        "validos": 0,
+        "lula": 0,
+        "flavio": 0
+      },
+      "fora": {
+        "locais": 5,
+        "aptos": 1843,
+        "validos": 1457,
+        "lula": 458,
+        "flavio": 922,
+        "pct_lula": 31.43,
+        "pct_flavio": 63.28
+      }
+    },
+    "Porto Alegre": {
+      "dentro": {
+        "locais": 46,
+        "aptos": 104303,
+        "validos": 76910,
+        "lula": 37204,
+        "flavio": 32730,
+        "pct_lula": 48.37,
+        "pct_flavio": 42.56
+      },
+      "fora": {
+        "locais": 297,
+        "aptos": 952194,
+        "validos": 696517,
+        "lula": 338592,
+        "flavio": 290808,
+        "pct_lula": 48.61,
+        "pct_flavio": 41.75
+      }
+    },
+    "Portão": {
+      "dentro": {
+        "locais": 1,
+        "aptos": 261,
+        "validos": 204,
+        "lula": 31,
+        "flavio": 147,
+        "pct_lula": 15.2,
+        "pct_flavio": 72.06
+      },
+      "fora": {
+        "locais": 11,
+        "aptos": 24995,
+        "validos": 19159,
+        "lula": 6090,
+        "flavio": 11297,
+        "pct_lula": 31.79,
+        "pct_flavio": 58.96
+      }
+    },
+    "Sapiranga": {
+      "dentro": {
+        "locais": 0,
+        "aptos": 0,
+        "validos": 0,
+        "lula": 0,
+        "flavio": 0
+      },
+      "fora": {
+        "locais": 37,
+        "aptos": 61332,
+        "validos": 48604,
+        "lula": 14701,
+        "flavio": 30509,
+        "pct_lula": 30.25,
+        "pct_flavio": 62.77
+      }
+    },
+    "Sapucaia do Sul": {
+      "dentro": {
+        "locais": 1,
+        "aptos": 1127,
+        "validos": 828,
+        "lula": 380,
+        "flavio": 391,
+        "pct_lula": 45.89,
+        "pct_flavio": 47.22
+      },
+      "fora": {
+        "locais": 42,
+        "aptos": 101296,
+        "validos": 72463,
+        "lula": 31424,
+        "flavio": 33989,
+        "pct_lula": 43.37,
+        "pct_flavio": 46.91
+      }
+    },
+    "São Jerônimo": {
+      "dentro": {
+        "locais": 3,
+        "aptos": 3567,
+        "validos": 2518,
+        "lula": 1131,
+        "flavio": 1172,
+        "pct_lula": 44.92,
+        "pct_flavio": 46.54
+      },
+      "fora": {
+        "locais": 5,
+        "aptos": 9101,
+        "validos": 6862,
+        "lula": 3185,
+        "flavio": 2960,
+        "pct_lula": 46.42,
+        "pct_flavio": 43.14
+      }
+    },
+    "São José do Hortêncio": {
+      "dentro": {
+        "locais": 1,
+        "aptos": 592,
+        "validos": 494,
+        "lula": 158,
+        "flavio": 300,
+        "pct_lula": 31.98,
+        "pct_flavio": 60.73
+      },
+      "fora": {
+        "locais": 0,
+        "aptos": 0,
+        "validos": 0,
+        "lula": 0,
+        "flavio": 0
+      }
+    },
+    "São José do Sul": {
+      "dentro": {
+        "locais": 0,
+        "aptos": 0,
+        "validos": 0,
+        "lula": 0,
+        "flavio": 0
+      },
+      "fora": {
+        "locais": 2,
+        "aptos": 852,
+        "validos": 698,
+        "lula": 134,
+        "flavio": 486,
+        "pct_lula": 19.2,
+        "pct_flavio": 69.63
+      }
+    },
+    "São Leopoldo": {
+      "dentro": {
+        "locais": 13,
+        "aptos": 52844,
+        "validos": 37923,
+        "lula": 15211,
+        "flavio": 19579,
+        "pct_lula": 40.11,
+        "pct_flavio": 51.63
+      },
+      "fora": {
+        "locais": 35,
+        "aptos": 109822,
+        "validos": 81606,
+        "lula": 30551,
+        "flavio": 43576,
+        "pct_lula": 37.44,
+        "pct_flavio": 53.4
+      }
+    },
+    "São Sebastião do Caí": {
+      "dentro": {
+        "locais": 4,
+        "aptos": 7326,
+        "validos": 5718,
+        "lula": 1684,
+        "flavio": 3494,
+        "pct_lula": 29.45,
+        "pct_flavio": 61.11
+      },
+      "fora": {
+        "locais": 10,
+        "aptos": 9125,
+        "validos": 6988,
+        "lula": 2048,
+        "flavio": 4333,
+        "pct_lula": 29.31,
+        "pct_flavio": 62.01
+      }
+    },
+    "Tabaí": {
+      "dentro": {
+        "locais": 0,
+        "aptos": 0,
+        "validos": 0,
+        "lula": 0,
+        "flavio": 0
+      },
+      "fora": {
+        "locais": 3,
+        "aptos": 3172,
+        "validos": 2473,
+        "lula": 1000,
+        "flavio": 1329,
+        "pct_lula": 40.44,
+        "pct_flavio": 53.74
+      }
+    },
+    "Taquara": {
+      "dentro": {
+        "locais": 0,
+        "aptos": 0,
+        "validos": 0,
+        "lula": 0,
+        "flavio": 0
+      },
+      "fora": {
+        "locais": 17,
+        "aptos": 19105,
+        "validos": 14567,
+        "lula": 4014,
+        "flavio": 9459,
+        "pct_lula": 27.56,
+        "pct_flavio": 64.93
+      }
+    },
+    "Triunfo": {
+      "dentro": {
+        "locais": 4,
+        "aptos": 4067,
+        "validos": 2985,
+        "lula": 1000,
+        "flavio": 1747,
+        "pct_lula": 33.5,
+        "pct_flavio": 58.53
+      },
+      "fora": {
+        "locais": 22,
+        "aptos": 17908,
+        "validos": 13309,
+        "lula": 4411,
+        "flavio": 7766,
+        "pct_lula": 33.14,
+        "pct_flavio": 58.35
+      }
+    },
+    "Viamão": {
+      "dentro": {
+        "locais": 1,
+        "aptos": 1993,
+        "validos": 1397,
+        "lula": 588,
+        "flavio": 671,
+        "pct_lula": 42.09,
+        "pct_flavio": 48.03
+      },
+      "fora": {
+        "locais": 73,
+        "aptos": 157810,
+        "validos": 113525,
+        "lula": 52789,
+        "flavio": 49625,
+        "pct_lula": 46.5,
+        "pct_flavio": 43.71
+      }
+    }
+  },
+  "porto_alegre": {
+    "dentro": {
+      "locais": 46,
+      "aptos": 104303,
+      "validos": 76910,
+      "lula": 37204,
+      "flavio": 32730,
+      "pct_lula": 48.37,
+      "pct_flavio": 42.56
+    },
+    "fora": {
+      "locais": 297,
+      "aptos": 952194,
+      "validos": 696517,
+      "lula": 338592,
+      "flavio": 290808,
+      "pct_lula": 48.61,
+      "pct_flavio": 41.75
+    }
+  },
+  "porto_alegre_criterios": {
+    "ada": {
+      "dentro": {
+        "locais": 46,
+        "aptos": 104303,
+        "validos": 76910,
+        "lula": 37204,
+        "flavio": 32730,
+        "pct_lula": 48.37,
+        "pct_flavio": 42.56
+      },
+      "fora": {
+        "locais": 297,
+        "aptos": 952194,
+        "validos": 696517,
+        "lula": 338592,
+        "flavio": 290808,
+        "pct_lula": 48.61,
+        "pct_flavio": 41.75
+      }
+    },
+    "ada_500": {
+      "dentro": {
+        "locais": 118,
+        "aptos": 314638,
+        "validos": 233503,
+        "lula": 110749,
+        "flavio": 100466,
+        "pct_lula": 47.43,
+        "pct_flavio": 43.03
+      },
+      "fora": {
+        "locais": 225,
+        "aptos": 741859,
+        "validos": 539924,
+        "lula": 265047,
+        "flavio": 223072,
+        "pct_lula": 49.09,
+        "pct_flavio": 41.32
+      }
+    },
+    "spgg": {
+      "dentro": {
+        "locais": 46,
+        "aptos": 101617,
+        "validos": 74449,
+        "lula": 36153,
+        "flavio": 31533,
+        "pct_lula": 48.56,
+        "pct_flavio": 42.36
+      },
+      "fora": {
+        "locais": 297,
+        "aptos": 954880,
+        "validos": 698978,
+        "lula": 339643,
+        "flavio": 292005,
+        "pct_lula": 48.59,
+        "pct_flavio": 41.78
+      }
+    },
+    "spgg_500": {
+      "dentro": {
+        "locais": 113,
+        "aptos": 298142,
+        "validos": 221174,
+        "lula": 104642,
+        "flavio": 95491,
+        "pct_lula": 47.31,
+        "pct_flavio": 43.17
+      },
+      "fora": {
+        "locais": 230,
+        "aptos": 758355,
+        "validos": 552253,
+        "lula": 271154,
+        "flavio": 228047,
+        "pct_lula": 49.1,
+        "pct_flavio": 41.29
+      }
+    },
+    "poa530": {
+      "dentro": {
+        "locais": 60,
+        "aptos": 132567,
+        "validos": 97937,
+        "lula": 47448,
+        "flavio": 41522,
+        "pct_lula": 48.45,
+        "pct_flavio": 42.4
+      },
+      "fora": {
+        "locais": 283,
+        "aptos": 923930,
+        "validos": 675490,
+        "lula": 328348,
+        "flavio": 282016,
+        "pct_lula": 48.61,
+        "pct_flavio": 41.75
+      }
+    }
+  },
+  "excluidos_sem_coord": {
+    "locais": 8,
+    "validos": 10629,
+    "pct_validos": 0.48,
+    "lista": [
+      {
+        "municipio": "Nova Santa Rita",
+        "NR_ZONA": 66,
+        "NR_LOCAL_VOTACAO": 1163,
+        "nome": "E.M.E.F. PROFESSORA JANAÍNA PEREIRA",
+        "validos": 1906
+      },
+      {
+        "municipio": "Novo Hamburgo",
+        "NR_ZONA": 76,
+        "NR_LOCAL_VOTACAO": 2089,
+        "nome": "EMEB CECÍLIA MEIRELES",
+        "validos": 2488
+      },
+      {
+        "municipio": "Novo Hamburgo",
+        "NR_ZONA": 172,
+        "NR_LOCAL_VOTACAO": 1953,
+        "nome": "EEEF AYRTON SENNA",
+        "validos": 1813
+      },
+      {
+        "municipio": "Porto Alegre",
+        "NR_ZONA": 1,
+        "NR_LOCAL_VOTACAO": 1813,
+        "nome": "UFCSPA (SEÇÕES MAL. FLORIANO PEIXOTO)",
+        "validos": 1795
+      },
+      {
+        "municipio": "Porto Alegre",
+        "NR_ZONA": 1,
+        "NR_LOCAL_VOTACAO": 1821,
+        "nome": "INST. DE ED. INFANTIL ANJO DAS FLORES (SEÇÕES ESC. OSCAR SCHMITT)",
+        "validos": 418
+      },
+      {
+        "municipio": "Porto Alegre",
+        "NR_ZONA": 114,
+        "NR_LOCAL_VOTACAO": 1740,
+        "nome": "JOÃO PAULO, COLÉGIO",
+        "validos": 1171
+      },
+      {
+        "municipio": "Sapucaia do Sul",
+        "NR_ZONA": 108,
+        "NR_LOCAL_VOTACAO": 1740,
+        "nome": "PENITENCIARIA ESTADUAL DE SAPUCAIA DO SUL",
+        "validos": 19
+      },
+      {
+        "municipio": "Taquara",
+        "NR_ZONA": 55,
+        "NR_LOCAL_VOTACAO": 1589,
+        "nome": "E.M.E.F. EMÍLIO LEICHTVEIS - EMEL",
+        "validos": 1019
+      }
+    ]
+  },
+  "trocam_de_lado_ada_vs_spgg": 28,
+  "aptos_mapa_total": 3022756,
+  "densidade_min": 100
+}

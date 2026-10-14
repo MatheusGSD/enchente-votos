@@ -1,0 +1,92 @@
+{
+  "medidas": {
+    "voto_22_26": {
+      "rotulo": "Diferença PT − PL, 2022 → 2026",
+      "unidade": "pontos",
+      "estimativa": -0.76,
+      "ic95": [
+        -2.35,
+        1.53
+      ],
+      "dentro_cidades": -0.58,
+      "ic95_cidades": [
+        -3.14,
+        1.26
+      ]
+    },
+    "voto_18_22": {
+      "rotulo": "Diferença PT − PSL/PL, 2018 → 2022",
+      "unidade": "pontos",
+      "estimativa": 0.45,
+      "ic95": [
+        -2.34,
+        3.41
+      ],
+      "dentro_cidades": 0.49,
+      "ic95_cidades": [
+        -0.57,
+        2.33
+      ]
+    },
+    "aptos_22_26": {
+      "rotulo": "Eleitores aptos, 2022 → 2026",
+      "unidade": "%",
+      "estimativa": -1.79,
+      "ic95": [
+        -2.89,
+        -0.81
+      ],
+      "dentro_cidades": -2.56,
+      "ic95_cidades": [
+        -4.08,
+        -1.36
+      ]
+    },
+    "aptos_18_22": {
+      "rotulo": "Eleitores aptos, 2018 → 2022",
+      "unidade": "%",
+      "estimativa": 0.18,
+      "ic95": [
+        -2.19,
+        3.06
+      ],
+      "dentro_cidades": -1.34,
+      "ic95_cidades": [
+        -3.0,
+        0.7
+      ]
+    },
+    "abstencao_22_26": {
+      "rotulo": "Abstenção, 2022 → 2026",
+      "unidade": "pontos",
+      "estimativa": 0.82,
+      "ic95": [
+        -0.36,
+        1.75
+      ],
+      "dentro_cidades": 0.42,
+      "ic95_cidades": [
+        -0.3,
+        0.85
+      ]
+    },
+    "abstencao_18_22": {
+      "rotulo": "Abstenção, 2018 → 2022",
+      "unidade": "pontos",
+      "estimativa": -0.01,
+      "ic95": [
+        -0.8,
+        0.87
+      ],
+      "dentro_cidades": -0.19,
+      "ic95_cidades": [
+        -0.92,
+        0.39
+      ]
+    }
+  },
+  "b": 2000,
+  "semente": 42,
+  "zonas": 57,
+  "zonas_com_alagado": 30
+}

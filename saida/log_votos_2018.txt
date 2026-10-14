@@ -1,0 +1,5 @@
+2018 linhas de voto: 292440 | seções: 27274
+seções com voto: 27274 | aptos nas seções com voto: 8354732 de 8354732
+locais no RS: 8373 | sem coordenada: 12 (0.09% dos válidos)
+RS: {'haddad': '22.81%', 'bolsonaro': '52.63%'} | válidos: 6372436
+conferência Porto Alegre: {'haddad': 160710, 'bolsonaro': 362805, 'validos': 798601}

@@ -1,0 +1,5 @@
+2022 linhas de voto: 203520 | seções: 27201
+seções com voto: 27201 | aptos nas seções com voto: 8593469 de 8593469
+locais no RS: 8012 | sem coordenada: 50 (0.61% dos válidos)
+RS: {'lula': '42.28%', 'bolsonaro': '48.89%'} | válidos: 6637752
+conferência Porto Alegre: {'lula': 412553, 'bolsonaro': 323857, 'validos': 827993}

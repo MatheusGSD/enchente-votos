@@ -1,0 +1,8 @@
+municípios no mapa: 42 | locais contados: 1252 | sem coordenada (fora): 8
+ada       dentro:  153 locais,  376091 aptos | Lula 42.04 Flávio 48.74  || fora: Lula 40.29 Flávio 50.16
+ada_500   dentro:  375 locais,  897651 aptos | Lula 41.01 Flávio 49.47  || fora: Lula 40.29 Flávio 50.20
+spgg      dentro:  147 locais,  362737 aptos | Lula 42.56 Flávio 48.21  || fora: Lula 40.23 Flávio 50.22
+spgg_500  dentro:  335 locais,  812474 aptos | Lula 41.84 Flávio 48.62  || fora: Lula 40.02 Flávio 50.48
+ponderado pela população alagada: {'dentro': {'validos_equivalentes': 319321, 'pct_lula': np.float64(41.19), 'pct_flavio': np.float64(49.51)}, 'fora': {'validos_equivalentes': 1907516, 'pct_lula': np.float64(40.39), 'pct_flavio': np.float64(50.06)}, 'pop_alagada': 558861, 'pop_total': 3920649}
+trocam de lado UFRGS x SPGG: 28
+áreas pintadas: 1188 pontos | km²: 1567.7
