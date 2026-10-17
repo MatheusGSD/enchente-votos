@@ -15,7 +15,14 @@ html, body { margin: 0; height: 100%; background: var(--fundo); color: var(--tex
 #recolher { flex: none; width: 30px; height: 30px; border: 1px solid var(--linha); border-radius: 6px;
   background: #fff; font-size: 18px; line-height: 1; cursor: pointer; color: var(--texto2); }
 .corpo { overflow-y: auto; padding: 0 16px 14px; }
-#painel.fechado .corpo { display: none; }
+/* recolhido (o padrão): o título, a linha do tempo, o nome do passo e as cores; o "+" abre texto, camadas e fontes */
+#painel.fechado .corpo { padding-bottom: 12px; }
+#painel.fechado .corpo > * { display: none; }
+#painel.fechado .corpo > .passos, #painel.fechado .corpo > .narrativa, #painel.fechado .corpo > .legenda { display: block; }
+#painel.fechado .corpo > .passos { display: flex; }
+#painel.fechado .narrativa { margin-bottom: 6px; }
+#painel.fechado .narrativa p, #painel.fechado .legenda .tit, #painel.fechado .legenda .rots,
+#painel.fechado .legenda .extras, #painel.fechado .leg-setas ~ .leg-setas { display: none; }
 .sub { margin: 0 0 10px; color: var(--texto2); font-size: 13px; }
 
 .seg button { flex: 1; padding: 6px 4px; border: 1px solid var(--linha); background: #fff;
@@ -140,15 +147,11 @@ a { color: #2a5d9f; }
   #recolher { position: absolute; top: 8px; right: 12px; }
   #painel.fechado .cab { padding: 0; }
   #painel.fechado .cab h1 { display: none; }
+  /* recolhido no celular: sem o título do site, o nome do passo vai para o topo, ao lado do "+" */
   #painel.fechado .corpo { display: flex; flex-direction: column; padding: 10px 12px 10px; }
-  #painel.fechado .corpo > * { display: none; }
-  #painel.fechado .corpo > .narrativa { display: block; order: -1; margin: 0 44px 8px 0; min-height: 22px; }
+  #painel.fechado .corpo > .narrativa { order: -1; margin: 0 44px 8px 0; min-height: 22px; }
   #painel.fechado .narrativa h2 { margin: 2px 0 0; }
-  #painel.fechado .narrativa p { display: none; }
-  #painel.fechado .corpo > .passos { display: flex; margin-bottom: 6px; }
-  #painel.fechado .corpo > .legenda { display: block; }
-  #painel.fechado .legenda .tit, #painel.fechado .legenda .rots, #painel.fechado .legenda .extras,
-  #painel.fechado .leg-setas ~ .leg-setas { display: none; }
+  #painel.fechado .corpo > .passos { margin-bottom: 6px; }
   .passos ol button { font-size: 12px; padding: 7px 0; }
 
   .comparacao { left: 8px; right: 8px; top: 8px; bottom: auto; width: auto; max-height: calc(100% - var(--alt-painel, 140px) - 60px); }

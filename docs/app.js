@@ -462,9 +462,9 @@
       enquadrar();
       gravarHash();
     };
-    // no celular o painel começa recolhido: só o passo, a linha do tempo e a legenda das cores
+    // o painel começa recolhido: só a linha do tempo, o passo e a legenda das cores; o "+" abre o resto
     const painel = document.getElementById("painel");
-    recolhivel(painel, document.getElementById("recolher"), "painel", celular());
+    recolhivel(painel, document.getElementById("recolher"), "painel", true);
     recolhivel(document.getElementById("comparacao"), document.getElementById("comp-recolher"), "gráfico", false,
       () => { if (celular() && !mexeu) enquadrar(); });
     // a altura do painel posiciona os controles do mapa no celular (estilo.css)
