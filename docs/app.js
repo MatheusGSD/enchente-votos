@@ -1,14 +1,14 @@
 // Mapa interativo: enchente de 2024 × voto para presidente na Grande Porto Alegre.
 // Dados em dados/*.json, gerados por scripts/13_exportar_web.py. Sem build: Leaflet via cdnjs.
 (() => {
-  const PADRAO = { aba: "26", un: "pontos", mancha: "1", sim: "0", so: "0", mun: "", local: "" };
+  const PADRAO = { aba: "26", un: "pontos", mancha: "1", sim: "0", dest: "0", mun: "", local: "" };
   const ABAS = {
     "26": { campo: "m26", tit: "Diferença Lula (PT) − Flávio Bolsonaro (PL) em 2026, em pontos percentuais" },
     "22": { campo: "m22", tit: "Diferença Lula (PT) − Jair Bolsonaro (PL) em 2022, em pontos percentuais" },
     "18": { campo: "m18", tit: "Diferença Haddad (PT) − Jair Bolsonaro (PSL) em 2018, em pontos percentuais" },
     mud: { campo: "mud", tit: "Mudança na diferença PT − PL de 2022 para 2026, em pontos" },
   };
-  const COR_VAZIO = "#a9a59c", COR_FORA = "#c2beb5";
+  const COR_VAZIO = "#a9a59c";
   const RMAX = 8; // raio do maior local no zoom 10, em px
 
   // ---------- estado na URL (#aba=mud&mun=4314902&local=812) ----------
@@ -39,11 +39,15 @@
     const cl = mud ? meta.classes_mud : meta.classes;
     return cl[cl.length - 1 - classe(x, mud ? meta.cortes_mud : meta.cortes)].cor; // legenda vai da classe 4 à 0
   }
-  function estilo(p) {
+  // destaque: os locais alagados ganham contorno escuro e os outros só ficam apagados, nunca somem, para os dois
+  // lados da comparação continuarem no mapa
+  function estilo(p, area = false) {
     const c = cor(p);
-    if (estado.so === "1" && !p.ada) return { color: COR_FORA, weight: 0.8, fillOpacity: 0 };
-    if (!c) return { color: COR_VAZIO, weight: 1.2, fillOpacity: 0 };
-    return { color: meta.cor.fundo, weight: 0.6, fillColor: c, fillOpacity: 0.92 };
+    const s = c ? { color: meta.cor.fundo, weight: area ? 0.3 : 0.6, opacity: 1, fillColor: c, fillOpacity: area ? 0.85 : 0.92 }
+      : { color: COR_VAZIO, weight: area ? 0.5 : 1.2, opacity: 1, fillOpacity: 0 };
+    if (estado.dest !== "1") return s;
+    if (!p.ada) return { ...s, opacity: 0.5, fillOpacity: s.fillOpacity && 0.5 };
+    return { ...s, color: meta.cor.texto, weight: area ? 1.2 : 1.6 };
   }
 
   // ---------- mapa ----------
@@ -99,12 +103,14 @@
 
   function desenharPontos() {
     const visiveis = estado.un === "pontos";
+    for (const m of pontos) m.remove(); // readiciona na ordem original: do maior para o menor
+    if (!visiveis) return;
     for (const m of pontos) {
-      if (!visiveis) { m.remove(); continue; }
       m.setStyle(estilo(m.p));
       m.setRadius(raio(m.p.v26));
-      if (!mapa.hasLayer(m)) m.addTo(mapa);
+      m.addTo(mapa);
     }
+    if (estado.dest === "1") for (const m of pontos) if (m.p.ada) m.bringToFront();
   }
   mapa.on("zoomend", () => { if (estado.un === "pontos") for (const m of pontos) m.setRadius(raio(m.p.v26)); });
 
@@ -113,7 +119,7 @@
     const g = await baixar("areas.json");
     camAreas = L.geoJSON(g, {
       pane: "areas", renderer: telaAreas,
-      style: (f) => ({ ...estilo(porPid.get(f.properties.pid).p), weight: 0.3, fillOpacity: 0.85 }),
+      style: (f) => estilo(porPid.get(f.properties.pid).p, true),
       onEachFeature: (f, l) => l.on("click", () => abrirLocal(f.properties.pid, false)),
     });
     return camAreas;
@@ -121,11 +127,9 @@
   async function desenharAreas() {
     if (estado.un !== "areas") { if (camAreas) camAreas.remove(); return; }
     const c = await garantirAreas();
-    c.setStyle((f) => {
-      const s = estilo(porPid.get(f.properties.pid).p);
-      return s.fillOpacity ? { ...s, weight: 0.3, fillOpacity: 0.85 } : { ...s, weight: 0.5 };
-    });
+    c.setStyle((f) => estilo(porPid.get(f.properties.pid).p, true));
     if (!mapa.hasLayer(c)) c.addTo(mapa);
+    if (estado.dest === "1") c.eachLayer((l) => { if (porPid.get(l.feature.properties.pid).p.ada) l.bringToFront(); });
   }
 
   async function desenharSim() {
@@ -151,7 +155,7 @@
       <div class="extras">
         ${estado.mancha === "1" ? '<span><i class="amostra-mancha"></i>área alagada em maio de 2024</span>' : ""}
         ${vazio ? `<span><i class="amostra-vazio"></i>${vazio}</span>` : ""}
-        ${estado.so === "1" ? '<span><i class="amostra-fora"></i>locais fora da área alagada</span>' : ""}
+        ${estado.dest === "1" ? '<span><i class="amostra-destaque"></i>locais dentro da área alagada; os outros, apagados</span>' : ""}
       </div>`;
   }
 
@@ -185,7 +189,7 @@
     for (const b of document.querySelectorAll("[data-un]")) b.setAttribute("aria-pressed", b.dataset.un === estado.un);
     document.getElementById("c-mancha").checked = estado.mancha === "1";
     document.getElementById("c-sim").checked = estado.sim === "1";
-    document.getElementById("c-so").checked = estado.so === "1";
+    document.getElementById("c-dest").checked = estado.dest === "1";
     document.getElementById("mun").value = estado.mun;
   }
 
@@ -211,7 +215,7 @@
   function ligarControles() {
     for (const b of document.querySelectorAll("[data-aba]")) b.onclick = () => { estado.aba = b.dataset.aba; redesenhar(); };
     for (const b of document.querySelectorAll("[data-un]")) b.onclick = () => { estado.un = b.dataset.un; redesenhar(); };
-    for (const [id, k] of [["c-mancha", "mancha"], ["c-sim", "sim"], ["c-so", "so"]])
+    for (const [id, k] of [["c-mancha", "mancha"], ["c-sim", "sim"], ["c-dest", "dest"]])
       document.getElementById(id).onchange = (e) => { estado[k] = e.target.checked ? "1" : "0"; redesenhar(); };
     document.getElementById("mun").onchange = (e) => {
       estado.mun = e.target.value;

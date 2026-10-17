@@ -34,7 +34,7 @@ html, body { margin: 0; height: 100%; background: var(--fundo); color: var(--tex
 .extras i { display: inline-block; width: 14px; height: 10px; margin-right: 5px; vertical-align: -1px; border-radius: 2px; }
 .amostra-mancha { background: rgba(58, 58, 58, .3); border: 1px solid #141414; }
 .amostra-vazio { border: 1.5px solid #a9a59c; }
-.amostra-fora { border: 1px solid #c2beb5; }
+.amostra-destaque { border: 2px solid #0b0b0b; background: #d4d0c7; }
 
 .resumo { margin: 12px 0 4px; padding: 10px 12px; background: #fff; border: 1px solid var(--linha); border-radius: 8px; }
 .resumo .tit { font-size: 12.5px; color: var(--texto2); margin-bottom: 6px; }
