@@ -12,7 +12,7 @@
 <meta property="og:url" content="https://matheusgsd.github.io/enchente-votos/">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
-<link rel="stylesheet" href="estilo.css?v=1afb668a">
+<link rel="stylesheet" href="estilo.css?v=4195bfda">
 </head>
 <body>
 <div id="mapa" aria-label="Mapa"></div>
@@ -41,8 +41,6 @@
     <section class="narrativa" aria-live="polite">
       <h2 id="passo-tit"></h2>
       <p id="passo-txt"></p>
-      <svg id="grafico" viewBox="0 0 330 150" role="img"
-        aria-label="Diferença PT − PSL/PL nos locais alagados e no resto, em 2018, 2022 e 2026"></svg>
     </section>
 
     <div id="legenda" class="legenda"></div>
@@ -83,7 +81,21 @@
   </div>
 </aside>
 
+<!-- a comparação fica fora do painel: o painel e os pontos dizem quem venceu onde; o cartão, alagados × resto -->
+<section id="comparacao" class="comparacao" aria-labelledby="comp-tit">
+  <header>
+    <h2 id="comp-tit">Alagados × resto da região</h2>
+    <button id="comp-recolher" type="button" aria-expanded="true" aria-controls="comp-corpo" title="Recolher gráfico">−</button>
+  </header>
+  <div id="comp-corpo">
+    <p>Compara os locais de votação que ficaram <b>dentro da área alagada</b> em maio de 2024 com
+      <b class="cinza">todos os outros</b> da Grande Porto Alegre, nas mesmas seções eleitorais.</p>
+    <svg id="grafico" viewBox="0 0 330 214" role="img"
+      aria-label="Vantagem do PT sobre o PSL/PL nos locais alagados e no resto, em 2018, 2022 e 2026"></svg>
+  </div>
+</section>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
-<script src="app.js?v=681be134"></script>
+<script src="app.js?v=6c26ccbd"></script>
 </body>
 </html>

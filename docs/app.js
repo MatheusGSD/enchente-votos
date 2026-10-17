@@ -1,7 +1,7 @@
 // Mapa interativo: enchente de 2024 × voto para presidente na Grande Porto Alegre.
 // Dados em dados/*.json, gerados por scripts/13_exportar_web.py. Sem build: Leaflet via cdnjs.
-// O painel conta a história em cinco passos (2018, 2022, a enchente, 2026, o que mudou); um gráfico das duas
-// linhas, alagados × restante, avança junto com o mapa e carrega a comparação.
+// O painel conta a história em cinco passos (2018, 2022, a enchente, 2026, o que mudou); um cartão à parte, com o
+// gráfico das duas linhas, alagados × restante, avança junto com o mapa e carrega a comparação.
 (() => {
   const PADRAO = { passo: "1", un: "pontos", mancha: null, sim: "0", dest: "1", mun: "", local: "" };
   const ABAS = {
@@ -18,7 +18,7 @@
     "4": { aba: "26", anos: 3, mancha: "1" },
     "5": { aba: "mud", anos: 3, mancha: "1" },
   };
-  const COR_VAZIO = "#a9a59c", COR_ALAGADO = "#0a8fa3", COR_RESTO = "#b0761c"; // as cores da figura 2 do artigo
+  const COR_VAZIO = "#a9a59c";
   const RMAX = 8; // raio do maior local no zoom 10, em px
 
   // ---------- estado na URL (#passo=5&mun=4314902&local=812) ----------
@@ -302,35 +302,49 @@
     }[estado.passo];
   }
 
-  // duas linhas, alagados × restante, nas três eleições; mostra só as eleições que o passo já alcançou
+  // duas linhas, alagados × restante, nas três eleições; mostra só as eleições que o passo já alcançou.
+  // Sem cor de partido nem bolinhas nas linhas, para não lembrarem os pontos do mapa: alagados em preto contínuo
+  // (o contorno escuro dos locais alagados), o resto em cinza tracejado; o fundo diz quem venceu
+  const LINHAS = {
+    dentro: { classe: "g-alagados", rot: "Locais de votação dentro da área alagada" },
+    fora: { classe: "g-resto", rot: "Todos os outros locais da Grande Porto Alegre" },
+  };
   function grafico() {
     const { anos } = PASSOS[estado.passo];
     const L18 = resumo.linhas;
-    const xs = [105, 182, 259], y = (v) => 14 + ((8 - v) / 44) * 98; // de +8 a −36 pontos
+    const x0 = 6, x1 = 290, xs = [40, 150, 260], topo = 62, base = 162;
+    const y = (v) => topo + ((8 - v) / 44) * (base - topo); // de +8 a −36 pontos
     const xEnchente = xs[1] + 0.6 * (xs[2] - xs[1]);
-    const serie = (vals, cor, nome, dy) => {
-      const v = vals.slice(0, anos);
-      const pts = v.map((val, i) => `${xs[i]},${y(val).toFixed(1)}`).join(" ");
-      const ult = v.length - 1;
-      return `${v.length > 1 ? `<polyline points="${pts}" fill="none" stroke="${cor}" stroke-width="2.5" stroke-linejoin="round"/>` : ""}
-        ${v.map((val, i) => `<circle cx="${xs[i]}" cy="${y(val).toFixed(1)}" r="4" fill="${cor}" stroke="#fcfcfb" stroke-width="1.5"/>`).join("")}
-        <text x="${xs[ult] + 9}" y="${(y(v[ult]) + dy).toFixed(1)}" class="g-serie" fill="${cor}">${nome}</text>`;
+    const serie = (g) => {
+      const v = L18[g].slice(0, anos);
+      const pts = v.length > 1 ? v.map((val, i) => `${xs[i]},${y(val).toFixed(1)}`)
+        : [xs[0] - 16, xs[0] + 16].map((x) => `${x},${y(v[0]).toFixed(1)}`); // um ano só: um traço curto
+      return `<polyline points="${pts.join(" ")}" class="${LINHAS[g].classe}"/>`;
     };
-    const anosRot = ["2018", "2022", "2026"].map((t, i) => `<text x="${xs[i]}" y="128" class="g-ano${i < anos ? "" : " g-futuro"}">${t}</text>`);
-    const dists = L18.dentro.slice(0, anos).map((v, i) => `<text x="${xs[i]}" y="143" class="g-dist">${sinal(v - L18.fora[i])}</text>`);
+    const amostra = (g, yy) => `<line x1="0" x2="28" y1="${yy - 4}" y2="${yy - 4}" class="${LINHAS[g].classe}"/>
+      <text x="36" y="${yy}" class="g-leg">${LINHAS[g].rot}</text>`;
+    const anosRot = ["2018", "2022", "2026"].map((t, i) => `<text x="${xs[i]}" y="${base + 14}" class="g-ano${i < anos ? "" : " g-futuro"}">${t}</text>`);
+    const dists = L18.dentro.slice(0, anos).map((v, i) => `<text x="${xs[i]}" y="${base + 32}" class="g-dist">${fmt1(Math.abs(v - L18.fora[i]))}</text>`);
     const enchente = estado.passo >= "3"
-      ? `<line x1="${xEnchente}" x2="${xEnchente}" y1="8" y2="116" class="g-enchente${estado.passo === "3" ? " g-agora" : ""}"/>
-         <text x="${xEnchente}" y="6" class="g-enchente-rot">enchente</text>` : "";
+      ? `<line x1="${xEnchente}" x2="${xEnchente}" y1="${topo - 2}" y2="${base}" class="g-enchente${estado.passo === "3" ? " g-agora" : ""}"/>
+         <text x="${xEnchente}" y="${topo - 5}" class="g-enchente-rot">enchente</text>` : "";
     document.getElementById("grafico").innerHTML = `
-      <line x1="0" x2="285" y1="${y(0)}" y2="${y(0)}" class="g-zero"/>
-      <text x="0" y="${y(0) - 4}" class="g-eixo">↑ PT à frente</text>
-      <text x="0" y="${y(0) + 11}" class="g-eixo">↓ PSL/PL à frente</text>
+      <text x="0" y="11" class="g-tit">Vantagem do PT sobre o PSL/PL, em pontos</text>
+      ${amostra("dentro", 30)}
+      ${amostra("fora", 46)}
+      <rect x="${x0}" y="${topo}" width="${x1 - x0}" height="${y(0) - topo}" class="g-fundo-pt"/>
+      <rect x="${x0}" y="${y(0)}" width="${x1 - x0}" height="${base - y(0)}" class="g-fundo-pl"/>
+      ${xs.map((x) => `<line x1="${x}" x2="${x}" y1="${topo}" y2="${base}" class="g-grade"/>`).join("")}
+      <text x="${x0 + 4}" y="${topo + 11}" class="g-venceu g-pt">PT venceu</text>
+      <text x="${x1 - 4}" y="${base - 5}" class="g-venceu g-pl">PSL/PL venceu</text>
+      <line x1="${x0}" x2="${x1}" y1="${y(0)}" y2="${y(0)}" class="g-zero"/>
+      <text x="${x1 + 3}" y="${y(0) + 3}" class="g-eixo">empate</text>
       ${enchente}
-      ${serie(L18.fora, COR_RESTO, "resto", 9)}
-      ${serie(L18.dentro, COR_ALAGADO, "alagados", -4)}
+      ${serie("fora")}
+      ${serie("dentro")}
       ${anosRot.join("")}
-      <text x="0" y="143" class="g-dist-rot">alagados − resto</text>
-      ${dists.join("")}`;
+      ${dists.join("")}
+      <text x="${xs[1]}" y="${base + 46}" class="g-dist-rot">↑ distância entre as duas linhas, em pontos</text>`;
   }
 
   function narrativa() {
@@ -410,15 +424,23 @@
     gravarHash();
   }
 
+  const celular = () => matchMedia("(max-width: 700px)").matches;
+  // se o leitor ainda não arrastou nem deu zoom, recolher o cartão no celular reenquadra o mapa no espaço que sobrou
+  let enquadrando = false, mexeu = false;
+  mapa.on("dragstart zoomstart", () => { if (!enquadrando) mexeu = true; });
+
   function enquadrar() {
-    const celular = matchMedia("(max-width: 700px)").matches;
-    const painel = document.getElementById("painel");
-    const pad = celular ? { paddingTopLeft: [10, 30], paddingBottomRight: [10, painel.offsetHeight + 10] }
-      : { paddingTopLeft: [painel.offsetWidth + 30, 20], paddingBottomRight: [20, 20] };
+    const painel = document.getElementById("painel"), comp = document.getElementById("comparacao");
+    // no celular o cartão da comparação fica no topo e o painel embaixo; no computador, painel à esquerda e cartão à direita
+    const pad = celular() ? { paddingTopLeft: [10, comp.offsetHeight + 20], paddingBottomRight: [10, painel.offsetHeight + 10] }
+      : { paddingTopLeft: [painel.offsetWidth + 30, 20],
+          paddingBottomRight: [innerWidth - painel.offsetWidth - comp.offsetWidth > 560 ? comp.offsetWidth + 30 : 20, 20] };
     // no celular o zoom inteiro desperdiça até metade do espaço (o 8,9 ideal cai para 8): ali o enquadramento é fracionário
     const snap = mapa.options.zoomSnap;
-    if (celular) mapa.options.zoomSnap = 0;
+    if (celular()) mapa.options.zoomSnap = 0;
+    enquadrando = true;
     mapa.fitBounds(munBounds.get(estado.mun) || L.featureGroup(pontos).getBounds(), pad);
+    enquadrando = mexeu = false;
     mapa.options.zoomSnap = snap;
   }
 
@@ -440,15 +462,27 @@
       enquadrar();
       gravarHash();
     };
-    const painel = document.getElementById("painel"), botao = document.getElementById("recolher");
-    botao.onclick = () => {
-      const fechado = painel.classList.toggle("fechado");
-      botao.textContent = fechado ? "+" : "−";
-      botao.setAttribute("aria-expanded", !fechado);
-      botao.title = fechado ? "Abrir painel" : "Recolher painel";
+    // no celular o painel começa recolhido: só o passo, a linha do tempo e a legenda das cores
+    const painel = document.getElementById("painel");
+    recolhivel(painel, document.getElementById("recolher"), "painel", celular());
+    recolhivel(document.getElementById("comparacao"), document.getElementById("comp-recolher"), "gráfico", false,
+      () => { if (celular() && !mexeu) enquadrar(); });
+    // a altura do painel posiciona os controles do mapa no celular (estilo.css)
+    new ResizeObserver(() => document.documentElement.style.setProperty("--alt-painel", painel.offsetHeight + "px"))
+      .observe(painel);
+  }
+
+  function recolhivel(caixa, botao, nome, fechado, depois) {
+    const aplicar = (f) => {
+      caixa.classList.toggle("fechado", f);
+      botao.textContent = f ? "+" : "−";
+      botao.setAttribute("aria-expanded", !f);
+      botao.title = (f ? "Abrir " : "Recolher ") + nome;
     };
-    L.DomEvent.disableClickPropagation(painel);
-    L.DomEvent.disableScrollPropagation(painel);
+    aplicar(fechado);
+    botao.onclick = () => { aplicar(!caixa.classList.contains("fechado")); if (depois) depois(); };
+    L.DomEvent.disableClickPropagation(caixa);
+    L.DomEvent.disableScrollPropagation(caixa);
   }
 
   const estiloMun = (f) => ({
