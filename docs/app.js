@@ -145,7 +145,9 @@
   mapa.on("popupclose", () => { estado.local = ""; gravarHash(); });
 
   function desenharPontos() {
-    const visiveis = estado.un === "pontos";
+    const setas = aba() === "mud";
+    if (setas) desenharSetas(); else esconderSetas();
+    const visiveis = estado.un === "pontos" && !setas;
     for (const m of pontos) m.remove(); // readiciona na ordem original: do maior para o menor
     if (!visiveis) return;
     for (const m of pontos) {
@@ -156,6 +158,78 @@
     if (estado.dest === "1") for (const m of pontos) if (m.p.ada) m.bringToFront();
   }
   mapa.on("zoomend", () => { if (estado.un === "pontos") for (const m of pontos) m.setRadius(raio(m.p.v26)); });
+
+  // ---------- passo "Mudança": setas de deslocamento ----------
+  // Na mudança, cor de partido parecia dizer quem ganhou. Cada local vira uma seta que aponta para onde o voto andou
+  // (→ PL, ← PT): três tamanhos só e uma cor por direção; com o destaque, alagados fortes e o resto apagado.
+  // Escolhida em protótipo (branch prototipo/setas-mudanca) contra setas de comprimento contínuo e transição de cor.
+  const SETA = { incl: (35 * Math.PI) / 180, tam: [7, 13, 21], pt: "#d4574a", pl: "#3f74c2" };
+  const faixaSeta = (v) => (Math.abs(v) < 4 ? 0 : Math.abs(v) < 10 ? 1 : 2); // até 4, 4 a 10, mais de 10 pontos
+  let telaSetas, ctxSetas;
+
+  function caminhoSeta(x, y, dir, L) {
+    const x2 = x + dir * L * Math.cos(SETA.incl), y2 = y - L * Math.sin(SETA.incl);
+    const ang = Math.atan2(y2 - y, x2 - x), cab = Math.min(7, 2.5 + L * 0.3);
+    return [[x, y, x2, y2], ...[-0.5, 0.5].map((a) => [x2, y2, x2 - cab * Math.cos(ang + a), y2 - cab * Math.sin(ang + a)])];
+  }
+
+  function desenharSetas() {
+    if (!telaSetas) {
+      telaSetas = L.DomUtil.create("canvas", "", mapa.getPane("pontos"));
+      telaSetas.style.pointerEvents = "none";
+      ctxSetas = telaSetas.getContext("2d");
+    }
+    const tam = mapa.getSize(), dpr = window.devicePixelRatio || 1, ctx = ctxSetas;
+    L.DomUtil.setPosition(telaSetas, mapa.containerPointToLayerPoint([0, 0]));
+    telaSetas.width = tam.x * dpr; telaSetas.height = tam.y * dpr;
+    telaSetas.style.width = tam.x + "px"; telaSetas.style.height = tam.y + "px";
+    telaSetas.style.display = "";
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.lineCap = "round";
+    const esc = Math.max(0.8, Math.min(2.2, Math.pow(1.25, mapa.getZoom() - 10)));
+    const dest = estado.dest === "1";
+    for (const alagado of [false, true]) { // os de fora primeiro, os alagados por cima
+      for (const m of pontos) {
+        const p = m.p;
+        if (p.ada !== alagado) continue;
+        const { x, y } = mapa.latLngToContainerPoint(m.getLatLng());
+        ctx.globalAlpha = dest && !p.ada ? 0.3 : 1;
+        if (p.mud == null) { // sem comparação: um círculo vazio, como nos outros passos
+          ctx.strokeStyle = COR_VAZIO; ctx.lineWidth = 1.2;
+          ctx.beginPath(); ctx.arc(x, y, 3, 0, 2 * Math.PI); ctx.stroke();
+          continue;
+        }
+        ctx.strokeStyle = p.mud < 0 ? SETA.pl : SETA.pt; // PT − PL caiu → andou para o PL → seta para a direita
+        ctx.lineWidth = dest && p.ada ? 2.2 : 1.5;
+        ctx.beginPath();
+        for (const [a, b, c, d] of caminhoSeta(x, y, p.mud < 0 ? 1 : -1, SETA.tam[faixaSeta(p.mud)] * esc)) {
+          ctx.moveTo(a, b); ctx.lineTo(c, d);
+        }
+        ctx.stroke();
+      }
+    }
+    ctx.globalAlpha = 1;
+  }
+  const esconderSetas = () => { if (telaSetas) telaSetas.style.display = "none"; };
+  mapa.on("moveend zoomend resize", () => { if (aba() === "mud") desenharSetas(); });
+  mapa.on("zoomstart", esconderSetas);
+  // as setas ficam num canvas sem clique: o clique perto da base de uma abre o popup do local
+  mapa.on("click", (e) => {
+    if (aba() !== "mud") return;
+    let melhor = null, dmin = 12;
+    for (const m of pontos) {
+      const d = mapa.latLngToContainerPoint(m.getLatLng()).distanceTo(e.containerPoint);
+      if (d < dmin) { dmin = d; melhor = m; }
+    }
+    if (melhor) abrirLocal(melhor.p.pid, false);
+  });
+
+  // seta pequena em SVG para a legenda, com o mesmo desenho do mapa
+  function svgSeta(dir, cor, L, opac = 1, larg = 2) {
+    const d = caminhoSeta(dir > 0 ? 4 : 30, 18, dir, L).map(([a, b, c, e]) => `M${a},${b}L${c},${e}`).join("");
+    return `<svg width="34" height="22" viewBox="0 0 34 22" aria-hidden="true" style="opacity:${opac}">` +
+      `<path d="${d}" stroke="${cor}" stroke-width="${larg}" fill="none" stroke-linecap="round"/></svg>`;
+  }
 
   async function garantirAreas() {
     if (camAreas) return camAreas;
@@ -168,7 +242,7 @@
     return camAreas;
   }
   async function desenharAreas() {
-    if (estado.un !== "areas") { if (camAreas) camAreas.remove(); return; }
+    if (estado.un !== "areas" || aba() === "mud") { if (camAreas) camAreas.remove(); return; }
     const c = await garantirAreas();
     c.setStyle((f) => estilo(porPid.get(f.properties.pid).p, true));
     if (!mapa.hasLayer(c)) c.addTo(mapa);
@@ -259,6 +333,7 @@
   // ---------- painel ----------
   function legenda() {
     const mud = aba() === "mud";
+    if (mud) return legendaSetas();
     const cl = mud ? meta.classes_mud : meta.classes;
     const lados = meta.lados[aba()];
     const vazio = mud ? "sem comparação (menos de 100 votos)" : aba() === "18" ? "sem seções em 2018" : "";
@@ -275,11 +350,29 @@
       </div>`;
   }
 
+  function legendaSetas() {
+    const dest = estado.dest === "1";
+    document.getElementById("legenda").innerHTML = `
+      <div class="tit">Para onde o voto andou de 2022 para 2026 (diferença PT − PL, em pontos)</div>
+      <div class="leg-setas"><span>${svgSeta(-1, SETA.pt, 18)}para o PT</span><span>para o PL${svgSeta(1, SETA.pl, 18)}</span></div>
+      <div class="leg-setas">${SETA.tam.map((L, i) => `<span>${svgSeta(1, SETA.pl, L)}${["até 4", "4 a 10", "mais de 10"][i]}</span>`).join("")}</div>
+      ${dest ? `<div class="leg-setas"><span>${svgSeta(1, SETA.pl, 16, 1, 2.2)}locais dentro da área alagada</span>
+        <span>${svgSeta(1, SETA.pl, 16, 0.3)}resto</span></div>` : ""}
+      <div class="extras">
+        ${estado.mancha === "1" ? '<span><i class="amostra-mancha"></i>área alagada em maio de 2024</span>' : ""}
+        <span><i class="amostra-vazio redonda"></i>sem comparação (menos de 100 votos)</span>
+      </div>`;
+  }
+
   function sincronizarControles() {
     for (const b of document.querySelectorAll("[data-passo]")) {
       if (b.dataset.passo === estado.passo) b.setAttribute("aria-current", "step"); else b.removeAttribute("aria-current");
     }
-    for (const b of document.querySelectorAll("[data-un]")) b.setAttribute("aria-pressed", b.dataset.un === estado.un);
+    for (const b of document.querySelectorAll("[data-un]")) {
+      b.setAttribute("aria-pressed", b.dataset.un === estado.un);
+      b.disabled = aba() === "mud"; // na mudança são sempre setas, que partem do ponto do local
+      b.title = b.disabled ? "Na mudança, cada local é uma seta" : "";
+    }
     document.getElementById("c-mancha").checked = estado.mancha === "1";
     document.getElementById("c-sim").checked = estado.sim === "1";
     document.getElementById("c-dest").checked = estado.dest === "1";

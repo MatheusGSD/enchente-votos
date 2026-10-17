@@ -20,6 +20,7 @@ html, body { margin: 0; height: 100%; background: var(--fundo); color: var(--tex
 
 .seg button { flex: 1; padding: 6px 4px; border: 1px solid var(--linha); background: #fff;
   border-radius: 6px; font: inherit; font-size: 13px; color: var(--texto2); cursor: pointer; }
+.seg button:disabled { opacity: .45; cursor: default; }
 .seg button[aria-pressed="true"] { background: var(--texto); border-color: var(--texto); color: #fff; font-weight: 600; }
 
 /* linha do tempo: cinco passos com setas */
@@ -59,6 +60,10 @@ html, body { margin: 0; height: 100%; background: var(--fundo); color: var(--tex
 .extras i { display: inline-block; width: 14px; height: 10px; margin-right: 5px; vertical-align: -1px; border-radius: 2px; }
 .amostra-mancha { background: rgba(58, 58, 58, .3); border: 1px solid #141414; }
 .amostra-vazio { border: 1.5px solid #a9a59c; }
+.amostra-vazio.redonda { width: 9px; height: 9px; border-radius: 50%; }
+.leg-setas { display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: var(--texto2);
+  margin-top: 2px; }
+.leg-setas span { display: inline-flex; align-items: center; gap: 2px; }
 .amostra-destaque { border: 2px solid #0b0b0b; background: #d4d0c7; }
 
 
