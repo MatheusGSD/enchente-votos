@@ -1,5 +1,5 @@
 # downloads públicos (TSE, IBGE, UFRGS, SPGG, SEMA): 1,4 GB, baixados de novo pelas fontes
-dados/
+/dados/
 
 __pycache__/
 *.pyc
