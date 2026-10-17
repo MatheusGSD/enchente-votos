@@ -67,6 +67,30 @@
   // ---------- mapa ----------
   const mapa = L.map("mapa", { zoomControl: false, minZoom: 8, maxZoom: 17 });
   L.control.zoom({ position: "topright" }).addTo(mapa);
+  // volta à área de interesse: limpa o município escolhido e enquadra os locais de votação
+  const Centralizar = L.Control.extend({
+    options: { position: "topright" },
+    onAdd() {
+      const b = L.DomUtil.create("button", "btn-centro");
+      b.type = "button";
+      b.title = "Centralizar na Grande Porto Alegre";
+      b.innerHTML = '<svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="5" fill="none" stroke="currentColor" ' +
+        'stroke-width="1.6"/><circle cx="8" cy="8" r="1.8" fill="currentColor"/><path d="M8 0v3M8 13v3M0 8h3M13 8h3" ' +
+        'stroke="currentColor" stroke-width="1.6"/></svg><span>Grande Porto Alegre</span>';
+      L.DomEvent.disableClickPropagation(b);
+      b.onclick = () => {
+        if (!camMun) return;
+        estado.mun = "";
+        document.getElementById("mun").value = "";
+        camMun.setStyle(estiloMun);
+        mapa.closePopup();
+        enquadrar();
+        gravarHash();
+      };
+      return b;
+    },
+  });
+  new Centralizar().addTo(mapa);
   mapa.attributionControl.setPrefix('<a href="https://leafletjs.com" target="_blank" rel="noopener">Leaflet</a>');
   const ESRI = "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/";
   L.tileLayer(ESRI + "World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}", {
