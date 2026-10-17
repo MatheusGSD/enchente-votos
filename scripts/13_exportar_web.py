@@ -78,8 +78,7 @@ def locais(C, T):
     base["nome"] = g.nome.apply(lambda s: " / ".join(dict.fromkeys(n.strip() for n in s)))
     t = T.set_index("pid")
     m = MM.carregar()[0]["m_locais"].set_index("pid")
-    d = base.join(m[["validos22", "validos26", "margem22", "margem26", "mudanca", "comparavel", "ada", "f",
-                     "aptos22", "aptos26p"]]).join(t[["margem18"]])
+    d = base.join(m[["validos22", "validos26", "margem22", "margem26", "mudanca", "comparavel", "ada", "f"]]).join(t[["margem18"]])
     assert len(d) == len(m), "pid sem par entre camadas.gpkg e mudanca.gpkg"
     props = pd.DataFrame({
         "pid": d.index.astype(int),
@@ -88,7 +87,6 @@ def locais(C, T):
         "lula": (100 * d.lula / d.validos26).map(r1), "flavio": (100 * d.flavio / d.validos26).map(r1),
         "m18": d.margem18.map(r1), "m22": d.margem22.map(r1), "m26": d.margem26.map(r1),
         "mud": d.mudanca.where(d.comparavel).map(r1),
-        "a22": d.aptos22.fillna(0).astype(int), "a26": d.aptos26p.fillna(0).astype(int),
         "ada": d.ada.astype(bool), "f": d.f.round(2), "p530": d.poa530.astype(bool),
     }).reset_index(drop=True)
     return gpd.GeoDataFrame(props, geometry=list(d.geometry), crs=C.crs).sort_values("v26", ascending=False)

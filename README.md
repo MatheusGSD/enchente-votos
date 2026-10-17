@@ -11,9 +11,9 @@ Grande Porto Alegre.
 - **O voto andou igual dentro e fora da água.** De 2022 para 2026, a diferença PT − PL caiu 8,6 pontos nos locais
   alagados e 7,9 no restante. A diferença entre os dois (−0,8 ponto, intervalo de 95% de −2,4 a +1,5) é menor que
   a margem de acaso.
-- **O eleitorado das áreas alagadas encolheu mais.** Os eleitores aptos caíram 4,7% nas seções dos locais alagados
-  e 2,9% no restante. Essa é a única diferença que sai da margem de acaso. Antes da enchente (2018 → 2022), os dois
-  grupos cresciam no mesmo ritmo.
+- **A distância entre os dois grupos já existia antes da água.** Nas mesmas seções, os locais alagados votaram 3,3
+  pontos mais no PT que o restante em 2018, 3,8 em 2022 e 2,9 em 2026: é o perfil desses bairros, não efeito da
+  enchente.
 
 É uma comparação descritiva: mostra onde o voto foi diferente, não mede o efeito da enchente.
 

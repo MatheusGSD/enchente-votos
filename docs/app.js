@@ -131,7 +131,6 @@
         ${linha("mud", "Mudança 2022 → 2026", p.mud, "soma")}
       </table>
       <p>2026: Lula ${pct(p.lula)} · Flávio Bolsonaro ${pct(p.flavio)} · ${mil(p.v26)} votos válidos</p>
-      ${p.a22 ? `<p>Eleitores aptos: ${mil(p.a22)} em 2022 → ${mil(p.a26)} em 2026</p>` : ""}
       ${sim}<p class="nota">Pontos percentuais dos votos válidos, nas mesmas seções eleitorais.</p></div>`;
   }
 
