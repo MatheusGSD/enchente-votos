@@ -19,22 +19,33 @@
 
 <aside id="painel">
   <header class="cab">
-    <h1>Enchente de 2024 e voto para presidente</h1>
+    <h1>A enchente de 2024 mudou o voto para presidente?</h1>
     <button id="recolher" type="button" aria-expanded="true" aria-controls="corpo" title="Recolher painel">−</button>
   </header>
   <div id="corpo" class="corpo">
-    <p class="sub">Grande Porto Alegre, 42 municípios. Cada círculo é um local de votação; o tamanho é o número de
-      votos válidos em 2026. Clique num local para ver as três eleições.</p>
+    <p class="sub">Grande Porto Alegre, 42 municípios. Avance no tempo e compare os locais de votação alagados
+      (contorno escuro) com o resto.</p>
 
-    <nav class="abas" role="tablist" aria-label="O que pintar">
-      <button type="button" role="tab" data-aba="26">2026</button>
-      <button type="button" role="tab" data-aba="mud">Mudança 22→26</button>
-      <button type="button" role="tab" data-aba="22">2022</button>
-      <button type="button" role="tab" data-aba="18">2018</button>
+    <nav class="passos" aria-label="Linha do tempo">
+      <button type="button" id="ant" class="seta" aria-label="Passo anterior">◀</button>
+      <ol>
+        <li><button type="button" data-passo="1">2018</button></li>
+        <li><button type="button" data-passo="2">2022</button></li>
+        <li><button type="button" data-passo="3" class="ench">Enchente</button></li>
+        <li><button type="button" data-passo="4">2026</button></li>
+        <li><button type="button" data-passo="5">Mudança</button></li>
+      </ol>
+      <button type="button" id="prox" class="seta" aria-label="Próximo passo">▶</button>
     </nav>
 
+    <section class="narrativa" aria-live="polite">
+      <h2 id="passo-tit"></h2>
+      <p id="passo-txt"></p>
+      <svg id="grafico" viewBox="0 0 330 150" role="img"
+        aria-label="Diferença PT − PSL/PL nos locais alagados e no resto, em 2018, 2022 e 2026"></svg>
+    </section>
+
     <div id="legenda" class="legenda"></div>
-    <div id="resumo" class="resumo"></div>
 
     <fieldset class="camadas">
       <legend>Camadas</legend>
@@ -53,6 +64,8 @@
 
     <details class="sobre">
       <summary>Sobre e fontes</summary>
+      <p>Cada círculo é um local de votação; o tamanho é o número de votos válidos em 2026. Clique num local para ver
+        as três eleições. O gráfico usa só as seções que existem nas três eleições.</p>
       <p>Margem = % do candidato do PT − % do candidato do PSL (2018) ou do PL (2022 e 2026), nos votos válidos do
         1º turno. Cada local reúne as mesmas seções eleitorais nas três eleições, no ponto onde votaram em 2026.
         Locais com menos de 100 votos válidos em algum ano ficam sem cor na mudança.</p>

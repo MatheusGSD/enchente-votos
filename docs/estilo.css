@@ -18,11 +18,36 @@ html, body { margin: 0; height: 100%; background: var(--fundo); color: var(--tex
 #painel.fechado .corpo { display: none; }
 .sub { margin: 0 0 10px; color: var(--texto2); font-size: 13px; }
 
-.abas { display: flex; gap: 4px; margin-bottom: 10px; }
-.abas button, .seg button { flex: 1; padding: 6px 4px; border: 1px solid var(--linha); background: #fff;
+.seg button { flex: 1; padding: 6px 4px; border: 1px solid var(--linha); background: #fff;
   border-radius: 6px; font: inherit; font-size: 13px; color: var(--texto2); cursor: pointer; }
-.abas button[aria-selected="true"], .seg button[aria-pressed="true"] { background: var(--texto); border-color: var(--texto);
-  color: #fff; font-weight: 600; }
+.seg button[aria-pressed="true"] { background: var(--texto); border-color: var(--texto); color: #fff; font-weight: 600; }
+
+/* linha do tempo: cinco passos com setas */
+.passos { display: flex; align-items: center; gap: 4px; margin-bottom: 8px; }
+.passos ol { display: flex; flex: 1; gap: 3px; margin: 0; padding: 0; list-style: none; }
+.passos li { flex: 1; }
+.passos ol button { width: 100%; padding: 6px 0; border: 1px solid var(--linha); background: #fff; border-radius: 6px;
+  font: inherit; font-size: 12.5px; color: var(--texto2); cursor: pointer; }
+.passos ol button.ench { border-style: dashed; }
+.passos ol button[aria-current="step"] { background: var(--texto); border-color: var(--texto); color: #fff; font-weight: 600; }
+.seta { flex: none; width: 30px; height: 30px; border: 1px solid var(--linha); border-radius: 6px; background: #fff;
+  font-size: 11px; color: var(--texto); cursor: pointer; }
+.seta:disabled { opacity: .35; cursor: default; }
+
+.narrativa { margin-bottom: 10px; }
+.narrativa h2 { margin: 4px 0 2px; font-size: 15px; }
+.narrativa p { margin: 0 0 4px; font-size: 13.5px; }
+#grafico { display: block; width: 100%; height: auto; font-family: inherit; }
+#grafico .g-zero { stroke: #8a8880; stroke-width: 0.8; stroke-dasharray: 4 3; }
+#grafico .g-eixo { font-size: 9px; fill: #8a8880; }
+#grafico .g-ano { font-size: 11px; font-weight: 700; text-anchor: middle; fill: #0b0b0b; }
+#grafico .g-futuro { fill: #c9c5bc; font-weight: 400; }
+#grafico .g-dist { font-size: 11px; font-weight: 700; text-anchor: middle; fill: #0b0b0b; }
+#grafico .g-dist-rot { font-size: 10px; fill: #52514e; }
+#grafico .g-serie { font-size: 11px; font-weight: 600; }
+#grafico .g-enchente { stroke: #52514e; stroke-width: 1; stroke-dasharray: 1.5 2.5; }
+#grafico .g-enchente.g-agora { stroke: #0b0b0b; stroke-width: 2; stroke-dasharray: none; }
+#grafico .g-enchente-rot { font-size: 9.5px; fill: #52514e; text-anchor: middle; }
 
 .legenda .tit { font-size: 12.5px; color: var(--texto2); margin-bottom: 4px; }
 .faixa { display: grid; grid-template-columns: repeat(5, 1fr); gap: 2px; }
@@ -36,13 +61,6 @@ html, body { margin: 0; height: 100%; background: var(--fundo); color: var(--tex
 .amostra-vazio { border: 1.5px solid #a9a59c; }
 .amostra-destaque { border: 2px solid #0b0b0b; background: #d4d0c7; }
 
-.resumo { margin: 12px 0 4px; padding: 10px 12px; background: #fff; border: 1px solid var(--linha); border-radius: 8px; }
-.resumo .tit { font-size: 12.5px; color: var(--texto2); margin-bottom: 6px; }
-.resumo table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
-.resumo td { padding: 2px 0; font-size: 13px; }
-.resumo td.n { text-align: right; font-weight: 600; font-size: 15px; }
-.resumo .nota { margin: 6px 0 0; font-size: 12px; color: var(--texto2); }
-.ponto { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 6px; vertical-align: 0; }
 
 .camadas { border: 0; padding: 0; margin: 12px 0 8px; }
 .camadas legend { padding: 0; font-size: 12.5px; color: var(--texto2); margin-bottom: 2px; }
@@ -73,7 +91,7 @@ a { color: #2a5d9f; }
 
 /* celular: o painel vira uma faixa embaixo */
 @media (max-width: 700px) {
-  #painel { top: auto; left: 0; right: 0; bottom: 0; width: auto; max-height: 48vh; border-radius: 12px 12px 0 0; }
+  #painel { top: auto; left: 0; right: 0; bottom: 0; width: auto; max-height: 56vh; border-radius: 12px 12px 0 0; }
   .cab { padding: 10px 16px 4px; }
   .cab h1 { font-size: 15px; }
   .sub { display: none; }

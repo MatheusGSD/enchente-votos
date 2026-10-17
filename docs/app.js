@@ -1,25 +1,39 @@
 // Mapa interativo: enchente de 2024 × voto para presidente na Grande Porto Alegre.
 // Dados em dados/*.json, gerados por scripts/13_exportar_web.py. Sem build: Leaflet via cdnjs.
+// O painel conta a história em cinco passos (2018, 2022, a enchente, 2026, o que mudou); um gráfico das duas
+// linhas, alagados × restante, avança junto com o mapa e carrega a comparação.
 (() => {
-  const PADRAO = { aba: "26", un: "pontos", mancha: "1", sim: "0", dest: "0", mun: "", local: "" };
+  const PADRAO = { passo: "1", un: "pontos", mancha: null, sim: "0", dest: "1", mun: "", local: "" };
   const ABAS = {
     "26": { campo: "m26", tit: "Diferença Lula (PT) − Flávio Bolsonaro (PL) em 2026, em pontos percentuais" },
     "22": { campo: "m22", tit: "Diferença Lula (PT) − Jair Bolsonaro (PL) em 2022, em pontos percentuais" },
     "18": { campo: "m18", tit: "Diferença Haddad (PT) − Jair Bolsonaro (PSL) em 2018, em pontos percentuais" },
     mud: { campo: "mud", tit: "Mudança na diferença PT − PL de 2022 para 2026, em pontos" },
   };
-  const COR_VAZIO = "#a9a59c";
+  // anos: quantas eleições o gráfico já mostra; mancha: se a área alagada começa ligada
+  const PASSOS = {
+    "1": { aba: "18", anos: 1, mancha: "0" },
+    "2": { aba: "22", anos: 2, mancha: "0" },
+    "3": { aba: "22", anos: 2, mancha: "1" },
+    "4": { aba: "26", anos: 3, mancha: "1" },
+    "5": { aba: "mud", anos: 3, mancha: "1" },
+  };
+  const COR_VAZIO = "#a9a59c", COR_ALAGADO = "#0a8fa3", COR_RESTO = "#b0761c"; // as cores da figura 2 do artigo
   const RMAX = 8; // raio do maior local no zoom 10, em px
 
-  // ---------- estado na URL (#aba=mud&mun=4314902&local=812) ----------
+  // ---------- estado na URL (#passo=5&mun=4314902&local=812) ----------
   const estado = { ...PADRAO };
   const params = new URLSearchParams(location.hash.slice(1));
   for (const k of Object.keys(PADRAO)) if (params.has(k)) estado[k] = params.get(k);
-  if (!ABAS[estado.aba]) estado.aba = PADRAO.aba;
+  if (!params.has("passo") && params.has("aba")) estado.passo = { 18: "1", 22: "2", 26: "4", mud: "5" }[params.get("aba")] || "1";
+  if (!PASSOS[estado.passo]) estado.passo = PADRAO.passo;
+  if (estado.mancha == null) estado.mancha = PASSOS[estado.passo].mancha;
+  const aba = () => PASSOS[estado.passo].aba;
+  const padrao = (k) => (k === "mancha" ? PASSOS[estado.passo].mancha : PADRAO[k]);
 
   function gravarHash() {
     const p = new URLSearchParams();
-    for (const [k, v] of Object.entries(estado)) if (v !== PADRAO[k]) p.set(k, v);
+    for (const [k, v] of Object.entries(estado)) if (v !== padrao(k)) p.set(k, v);
     history.replaceState(null, "", p.toString() ? "#" + p : location.pathname + location.search);
   }
 
@@ -33,9 +47,9 @@
   let meta, resumo;
   const classe = (x, cortes) => cortes.filter((c) => x >= c).length; // = np.digitize
   function cor(p) {
-    const x = p[ABAS[estado.aba].campo];
+    const x = p[ABAS[aba()].campo];
     if (x == null) return null;
-    const mud = estado.aba === "mud";
+    const mud = aba() === "mud";
     const cl = mud ? meta.classes_mud : meta.classes;
     return cl[cl.length - 1 - classe(x, mud ? meta.cortes_mud : meta.cortes)].cor; // legenda vai da classe 4 à 0
   }
@@ -141,51 +155,101 @@
     camSim.addTo(mapa);
   }
 
+  // ---------- os cinco passos ----------
+  function textoPasso() {
+    const [d, f] = [resumo.linhas.dentro, resumo.linhas.fora];
+    const dist = (i) => sinal(d[i] - f[i]);
+    const D = resumo.dentro, F = resumo.fora, [a, b] = resumo.ic_mud;
+    return {
+      "1": ["2018, antes da enchente",
+        `Haddad (PT) contra Jair Bolsonaro (PSL). Os locais que a água atingiria em 2024 (contorno escuro) já votavam
+        um pouco mais no PT que o resto: ${dist(0)} pontos de distância.`],
+      "2": ["2022, antes da enchente",
+        `Lula (PT) contra Jair Bolsonaro (PL). A região inteira foi para o PT, e as duas linhas subiram juntas.
+        A distância ficou em ${dist(1)} pontos.`],
+      "3": ["Maio de 2024: a enchente",
+        `A água cobre ${D.locais} locais de votação, onde votam ${mil(Math.round(D.aptos / 1000))} mil eleitores.
+        No mapa, o voto de 2022, a última eleição antes dela.`],
+      "4": ["2026, depois da enchente",
+        `Lula (PT) contra Flávio Bolsonaro (PL). A região inteira foi para o PL, e as linhas desceram juntas.
+        A distância ficou em ${dist(2)} pontos, perto da de antes da água.`],
+      "5": ["O que mudou de 2022 para 2026",
+        `A diferença PT − PL caiu ${fmt1(-D.mud)} pontos nos locais alagados e ${fmt1(-F.mud)} no resto.
+        A diferença entre os dois (${sinal(resumo.dif_mud)}) fica dentro da margem de acaso (${sinal(a)} a ${sinal(b)}):
+        o voto andou igual dentro e fora da água.`],
+    }[estado.passo];
+  }
+
+  // duas linhas, alagados × restante, nas três eleições; mostra só as eleições que o passo já alcançou
+  function grafico() {
+    const { anos } = PASSOS[estado.passo];
+    const L18 = resumo.linhas;
+    const xs = [105, 182, 259], y = (v) => 14 + ((8 - v) / 44) * 98; // de +8 a −36 pontos
+    const xEnchente = xs[1] + 0.6 * (xs[2] - xs[1]);
+    const serie = (vals, cor, nome, dy) => {
+      const v = vals.slice(0, anos);
+      const pts = v.map((val, i) => `${xs[i]},${y(val).toFixed(1)}`).join(" ");
+      const ult = v.length - 1;
+      return `${v.length > 1 ? `<polyline points="${pts}" fill="none" stroke="${cor}" stroke-width="2.5" stroke-linejoin="round"/>` : ""}
+        ${v.map((val, i) => `<circle cx="${xs[i]}" cy="${y(val).toFixed(1)}" r="4" fill="${cor}" stroke="#fcfcfb" stroke-width="1.5"/>`).join("")}
+        <text x="${xs[ult] + 9}" y="${(y(v[ult]) + dy).toFixed(1)}" class="g-serie" fill="${cor}">${nome}</text>`;
+    };
+    const anosRot = ["2018", "2022", "2026"].map((t, i) => `<text x="${xs[i]}" y="128" class="g-ano${i < anos ? "" : " g-futuro"}">${t}</text>`);
+    const dists = L18.dentro.slice(0, anos).map((v, i) => `<text x="${xs[i]}" y="143" class="g-dist">${sinal(v - L18.fora[i])}</text>`);
+    const enchente = estado.passo >= "3"
+      ? `<line x1="${xEnchente}" x2="${xEnchente}" y1="8" y2="116" class="g-enchente${estado.passo === "3" ? " g-agora" : ""}"/>
+         <text x="${xEnchente}" y="6" class="g-enchente-rot">enchente</text>` : "";
+    document.getElementById("grafico").innerHTML = `
+      <line x1="0" x2="285" y1="${y(0)}" y2="${y(0)}" class="g-zero"/>
+      <text x="0" y="${y(0) - 4}" class="g-eixo">↑ PT à frente</text>
+      <text x="0" y="${y(0) + 11}" class="g-eixo">↓ PSL/PL à frente</text>
+      ${enchente}
+      ${serie(L18.fora, COR_RESTO, "resto", 9)}
+      ${serie(L18.dentro, COR_ALAGADO, "alagados", -4)}
+      ${anosRot.join("")}
+      <text x="0" y="143" class="g-dist-rot">alagados − resto</text>
+      ${dists.join("")}`;
+  }
+
+  function narrativa() {
+    const [tit, txt] = textoPasso();
+    document.getElementById("passo-tit").textContent = tit;
+    document.getElementById("passo-txt").textContent = txt.replace(/\s+/g, " ");
+    grafico();
+    document.getElementById("ant").disabled = estado.passo === "1";
+    document.getElementById("prox").disabled = estado.passo === "5";
+  }
+
+  function irPara(passo) {
+    if (!PASSOS[passo] || passo === estado.passo) return;
+    estado.passo = passo;
+    estado.mancha = PASSOS[passo].mancha;
+    redesenhar();
+  }
+
   // ---------- painel ----------
   function legenda() {
-    const mud = estado.aba === "mud";
+    const mud = aba() === "mud";
     const cl = mud ? meta.classes_mud : meta.classes;
-    const lados = meta.lados[estado.aba];
-    const vazio = mud ? "sem comparação (menos de 100 votos)" : estado.aba === "18" ? "sem seções em 2018" : "";
+    const lados = meta.lados[aba()];
+    const vazio = mud ? "sem comparação (menos de 100 votos)" : aba() === "18" ? "sem seções em 2018" : "";
+    const quem = estado.passo < "3" ? "locais que a enchente atingiria em 2024" : "locais dentro da área alagada";
     document.getElementById("legenda").innerHTML = `
-      <div class="tit">${ABAS[estado.aba].tit}</div>
+      <div class="tit">${ABAS[aba()].tit}</div>
       <div class="faixa">${cl.map((c) => `<span style="background:${c.cor}"></span>`).join("")}</div>
       <div class="rots">${cl.map((c) => `<div>${esc(c.rot)}</div>`).join("")}</div>
       ${mud ? "" : `<div class="lados"><span>← ${lados[0]}</span><span>${lados[1]} →</span></div>`}
       <div class="extras">
+        ${estado.dest === "1" ? `<span><i class="amostra-destaque"></i>${quem}</span>` : ""}
         ${estado.mancha === "1" ? '<span><i class="amostra-mancha"></i>área alagada em maio de 2024</span>' : ""}
         ${vazio ? `<span><i class="amostra-vazio"></i>${vazio}</span>` : ""}
-        ${estado.dest === "1" ? '<span><i class="amostra-destaque"></i>locais dentro da área alagada; os outros, apagados</span>' : ""}
       </div>`;
   }
 
-  function quadroResumo() {
-    const d = resumo.dentro, f = resumo.fora;
-    const campo = ABAS[estado.aba].campo;
-    const tit = {
-      "26": "Diferença PT − PL em 2026", "22": "Diferença PT − PL em 2022",
-      "18": "Diferença PT − PSL em 2018", mud: "Mudança na diferença PT − PL, 2022 → 2026",
-    }[estado.aba];
-    let nota = "";
-    if (estado.aba === "mud") {
-      const [a, b] = resumo.ic_mud;
-      nota = `Diferença entre os dois: ${sinal(resumo.dif_mud)} ponto (intervalo de 95%: ${sinal(a)} a ${sinal(b)}). ` +
-        "Dentro da margem de acaso: o voto andou igual dentro e fora da água.";
-    } else if (estado.aba === "18") {
-      nota = "2018: só as seções que existem nas três eleições.";
-    }
-    document.getElementById("resumo").innerHTML = `
-      <div class="tit">${tit}, em pontos</div>
-      <table>
-        <tr><td><span class="ponto" style="background:var(--alagado)"></span>Locais dentro da área alagada
-          <br><small>${d.locais} locais, ${mil(Math.round(d.aptos / 1000))} mil eleitores</small></td><td class="n">${sinal(d[campo])}</td></tr>
-        <tr><td><span class="ponto" style="background:#b0761c"></span>Restante do mapa</td><td class="n">${sinal(f[campo])}</td></tr>
-      </table>
-      ${nota ? `<p class="nota">${nota}</p>` : ""}`;
-  }
-
   function sincronizarControles() {
-    for (const b of document.querySelectorAll("[data-aba]")) b.setAttribute("aria-selected", b.dataset.aba === estado.aba);
+    for (const b of document.querySelectorAll("[data-passo]")) {
+      if (b.dataset.passo === estado.passo) b.setAttribute("aria-current", "step"); else b.removeAttribute("aria-current");
+    }
     for (const b of document.querySelectorAll("[data-un]")) b.setAttribute("aria-pressed", b.dataset.un === estado.un);
     document.getElementById("c-mancha").checked = estado.mancha === "1";
     document.getElementById("c-sim").checked = estado.sim === "1";
@@ -195,8 +259,8 @@
 
   function redesenhar() {
     sincronizarControles();
+    narrativa();
     legenda();
-    quadroResumo();
     if (estado.mancha === "1") camMancha.addTo(mapa); else camMancha.remove();
     desenharPontos();
     desenharAreas();
@@ -213,7 +277,14 @@
   }
 
   function ligarControles() {
-    for (const b of document.querySelectorAll("[data-aba]")) b.onclick = () => { estado.aba = b.dataset.aba; redesenhar(); };
+    for (const b of document.querySelectorAll("[data-passo]")) b.onclick = () => irPara(b.dataset.passo);
+    document.getElementById("ant").onclick = () => irPara(String(+estado.passo - 1));
+    document.getElementById("prox").onclick = () => irPara(String(+estado.passo + 1));
+    document.addEventListener("keydown", (e) => {
+      if (e.target.closest("select, input")) return;
+      if (e.key === "ArrowRight") irPara(String(+estado.passo + 1));
+      if (e.key === "ArrowLeft") irPara(String(+estado.passo - 1));
+    });
     for (const b of document.querySelectorAll("[data-un]")) b.onclick = () => { estado.un = b.dataset.un; redesenhar(); };
     for (const [id, k] of [["c-mancha", "mancha"], ["c-sim", "sim"], ["c-dest", "dest"]])
       document.getElementById(id).onchange = (e) => { estado[k] = e.target.checked ? "1" : "0"; redesenhar(); };
@@ -280,7 +351,7 @@
   }
 
   iniciar().catch((e) => {
-    document.getElementById("resumo").innerHTML = `<p class="nota">Não foi possível carregar os dados (${esc(e.message)}).</p>`;
+    document.getElementById("passo-txt").textContent = `Não foi possível carregar os dados (${e.message}).`;
     console.error(e);
   });
 })();

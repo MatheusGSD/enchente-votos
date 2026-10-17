@@ -104,6 +104,8 @@ def resumo():
                 "m26": round(N[g]["pct_lula"] - N[g]["pct_flavio"], 1),
                 "m22": round(NM[g]["margem_22"], 1), "mud": round(NM[g]["mudanca_margem"], 1),
                 "m18": round(N18[g]["margem_18"], 1)}
+    # linha do tempo do painel: as três eleições nas seções que existem em todas (os números da figura 2 do artigo)
+    r["linhas"] = {g: [round(N18[g][f"margem_{a}"], 1) for a in ("18", "22", "26")] for g in ("dentro", "fora")}
     r["ic_mud"] = NI["voto_22_26"]["ic95"]
     r["dif_mud"] = NI["voto_22_26"]["estimativa"]
     return r
