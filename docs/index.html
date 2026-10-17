@@ -23,8 +23,8 @@
     <button id="recolher" type="button" aria-expanded="true" aria-controls="corpo" title="Recolher painel">−</button>
   </header>
   <div id="corpo" class="corpo">
-    <p class="sub">Grande Porto Alegre, 42 municípios. Avance no tempo e compare os locais de votação alagados
-      (contorno escuro) com o resto.</p>
+    <p class="sub">Grande Porto Alegre, 42 municípios. Avance no tempo e compare os locais de votação dentro da
+      área alagada (contorno escuro) com os de fora.</p>
 
     <nav class="passos" aria-label="Linha do tempo">
       <button type="button" id="ant" class="seta" aria-label="Passo anterior">◀</button>
@@ -81,21 +81,21 @@
   </div>
 </aside>
 
-<!-- a comparação fica fora do painel: o painel e os pontos dizem quem venceu onde; o cartão, alagados × resto -->
+<!-- a comparação fica fora do painel: o painel e os pontos dizem quem venceu onde; o cartão, dentro × fora da área alagada -->
 <section id="comparacao" class="comparacao" aria-labelledby="comp-tit">
   <header>
-    <h2 id="comp-tit">Alagados × resto da região</h2>
+    <h2 id="comp-tit">Dentro × fora da área alagada</h2>
     <button id="comp-recolher" type="button" aria-expanded="true" aria-controls="comp-corpo" title="Recolher gráfico">−</button>
   </header>
   <div id="comp-corpo">
     <p>Compara os locais de votação que ficaram <b>dentro da área alagada</b> em maio de 2024 com
-      <b class="cinza">todos os outros</b> da Grande Porto Alegre, nas mesmas seções eleitorais.</p>
+      os <b class="cinza">de fora</b>, em toda a Grande Porto Alegre, nas mesmas seções eleitorais.</p>
     <svg id="grafico" viewBox="0 0 330 214" role="img"
-      aria-label="Vantagem do PT sobre o PSL/PL nos locais alagados e no resto, em 2018, 2022 e 2026"></svg>
+      aria-label="Vantagem do PT sobre o PSL/PL dentro e fora da área alagada, em 2018, 2022 e 2026"></svg>
   </div>
 </section>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
-<script src="app.js?v=2307e4d0"></script>
+<script src="app.js?v=3f484d44"></script>
 </body>
 </html>

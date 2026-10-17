@@ -284,8 +284,8 @@
     const D = resumo.dentro, F = resumo.fora, [a, b] = resumo.ic_mud;
     return {
       "1": ["2018, antes da enchente",
-        `Haddad (PT) contra Jair Bolsonaro (PSL). Os locais que a água atingiria em 2024 (contorno escuro) já votavam
-        um pouco mais no PT que o resto: ${dist(0)} pontos de distância.`],
+        `Haddad (PT) contra Jair Bolsonaro (PSL). Os locais dentro da área que a água cobriria em 2024 (contorno
+        escuro) já votavam um pouco mais no PT que os de fora: ${dist(0)} pontos de distância.`],
       "2": ["2022, antes da enchente",
         `Lula (PT) contra Jair Bolsonaro (PL). A região inteira foi para o PT, e as duas linhas subiram juntas.
         A distância ficou em ${dist(1)} pontos.`],
@@ -296,7 +296,7 @@
         `Lula (PT) contra Flávio Bolsonaro (PL). A região inteira foi para o PL, e as linhas desceram juntas.
         A distância ficou em ${dist(2)} pontos, perto da de antes da água.`],
       "5": ["O que mudou de 2022 para 2026",
-        `A diferença PT − PL caiu ${fmt1(-D.mud)} pontos nos locais alagados e ${fmt1(-F.mud)} no resto.
+        `A diferença PT − PL caiu ${fmt1(-D.mud)} pontos dentro da área alagada e ${fmt1(-F.mud)} fora dela.
         A diferença entre os dois (${sinal(resumo.dif_mud)}) fica dentro da margem de acaso (${sinal(a)} a ${sinal(b)}):
         o voto andou igual dentro e fora da água.`],
     }[estado.passo];
@@ -307,7 +307,7 @@
   // (o contorno escuro dos locais alagados), o resto em cinza tracejado; o fundo diz quem venceu
   const LINHAS = {
     dentro: { classe: "g-alagados", rot: "Locais de votação dentro da área alagada" },
-    fora: { classe: "g-resto", rot: "Todos os outros locais da Grande Porto Alegre" },
+    fora: { classe: "g-resto", rot: "Locais de votação fora da área alagada" },
   };
   function grafico() {
     const { anos } = PASSOS[estado.passo];
@@ -390,7 +390,7 @@
       <div class="leg-setas"><span>${svgSeta(-1, SETA.pt, 18)}para o PT</span><span>para o PL${svgSeta(1, SETA.pl, 18)}</span></div>
       <div class="leg-setas">${SETA.tam.map((L, i) => `<span>${svgSeta(1, SETA.pl, L)}${["até 4", "4 a 10", "mais de 10"][i]}</span>`).join("")}</div>
       ${dest ? `<div class="leg-setas"><span>${svgSeta(1, SETA.pl, 16, 1, 2.2)}locais dentro da área alagada</span>
-        <span>${svgSeta(1, SETA.pl, 16, 0.3)}resto</span></div>` : ""}
+        <span>${svgSeta(1, SETA.pl, 16, 0.3)}fora dela</span></div>` : ""}
       <div class="extras">
         ${estado.mancha === "1" ? '<span><i class="amostra-mancha"></i>área alagada em maio de 2024</span>' : ""}
         <span><i class="amostra-vazio redonda"></i>sem comparação (menos de 100 votos)</span>
@@ -465,7 +465,8 @@
     // o painel começa recolhido: só a linha do tempo, o passo e a legenda das cores; o "+" abre o resto
     const painel = document.getElementById("painel");
     recolhivel(painel, document.getElementById("recolher"), "painel", true);
-    recolhivel(document.getElementById("comparacao"), document.getElementById("comp-recolher"), "gráfico", false,
+    // o cartão da comparação abre aberto no computador e recolhido no celular, onde cobriria o mapa
+    recolhivel(document.getElementById("comparacao"), document.getElementById("comp-recolher"), "gráfico", celular(),
       () => { if (celular() && !mexeu) enquadrar(); });
     // a altura do painel posiciona os controles do mapa no celular (estilo.css)
     new ResizeObserver(() => document.documentElement.style.setProperty("--alt-painel", painel.offsetHeight + "px"))
