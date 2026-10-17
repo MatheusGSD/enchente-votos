@@ -6,10 +6,12 @@ de Porto Alegre a 10 m, municípios e entornos dos locais por coverage_simplify 
 Cores, faixas e números do resumo vêm dos mesmos lugares que as figuras, para o mapa não divergir do artigo.
 Extensão .json (não .geojson): é a que o Pages serve com gzip.
 Lê saida/camadas.gpkg, saida/mudanca.gpkg, saida/tendencia_2018.csv e saida/numeros*.json.
-Saída: docs/dados/*.json e docs/og.png
+Saída: docs/dados/*.json, docs/og.png e o ?v= dos arquivos em docs/index.html (rode antes de cada publicação)
 """
+import hashlib
 import importlib
 import json
+import re
 import sys
 from datetime import date
 from pathlib import Path
@@ -131,6 +133,18 @@ def meta():
     }
 
 
+def carimbar():
+    """Põe em index.html um ?v= com o hash de app.js e estilo.css. O Pages manda o navegador guardar os arquivos por
+    10 min; com o endereço novo a cada mudança, quem já abriu o mapa não fica preso à versão antiga."""
+    html = WEB / "index.html"
+    t = html.read_text(encoding="utf-8")
+    for nome in ("app.js", "estilo.css"):
+        h = hashlib.sha1((WEB / nome).read_bytes()).hexdigest()[:8]
+        t = re.sub(rf'"{re.escape(nome)}(\?v=[0-9a-f]+)?"', f'"{nome}?v={h}"', t)
+    html.write_text(t, encoding="utf-8")
+    return html
+
+
 def og():
     """Prévia 1200 × 630 para LinkedIn e X: o centro do mapa da figura 1 do artigo."""
     src = SAIDA / "artigo" / "fig1_mapa_voto_2026.png"
@@ -172,6 +186,7 @@ def main():
     print(gravar_json(resumo(), "resumo.json"))
     print(gravar_json(meta(), "meta.json"))
     print(og())
+    print(carimbar())
     (WEB / ".nojekyll").touch()
 
 

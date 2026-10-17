@@ -106,7 +106,7 @@
   const tela = (pane) => L.canvas({ pane, padding: 0.5, tolerance: pane === "pontos" ? 6 : 0 });
   const telaPontos = tela("pontos"), telaAreas = tela("areas"), telaMancha = tela("mancha"), telaMun = tela("mun");
 
-  let pontos = [], vmax = 1, camMancha, camSim, camMun, camAreas, porPid = new Map(), munBounds = new Map();
+  let pontos = [], vmax = 1, balao, camMancha, camSim, camMun, camAreas, porPid = new Map(), munBounds = new Map();
 
   // cresce com o zoom, mas mais devagar que o mapa, para os locais do centro não se cobrirem
   const raio = (v) => Math.max(1.5, Math.min(20, Math.sqrt(v / vmax) * RMAX * Math.pow(1.3, mapa.getZoom() - 10)));
@@ -117,12 +117,18 @@
       : `<span class="tag">Fora da área alagada${p.f >= 0.05 ? ` · ${Math.round(100 * p.f)}% do entorno` : ""}</span>`;
     const lugar = [p.bairro, p.mun].filter(Boolean).map(esc).join(" · ");
     const sim = p.p530 ? '<p class="nota">Dentro da simulação do Guaíba a 5,30 m.</p>' : "";
+    // a linha do valor que está pintado no mapa agora (no passo da enchente, o mapa ainda é 2022)
+    const linha = (chave, rot, val, cls = "") => {
+      const agora = aba() === chave;
+      return `<tr class="${cls}${agora ? " agora" : ""}"><th>${rot}${agora ? ' <span class="no-mapa">no mapa</span>' : ""}</th>
+        <td>${sinal(val)}</td></tr>`;
+    };
     return `<div class="pop"><h3>${esc(p.nome)}</h3><p class="lugar">${lugar}</p>${tag}
       <table>
-        <tr><th>PT − PSL, 2018</th><td>${sinal(p.m18)}</td></tr>
-        <tr><th>PT − PL, 2022</th><td>${sinal(p.m22)}</td></tr>
-        <tr><th>PT − PL, 2026</th><td>${sinal(p.m26)}</td></tr>
-        <tr class="forte"><th>Mudança 2022 → 2026</th><td>${sinal(p.mud)}</td></tr>
+        ${linha("18", "PT − PSL, 2018", p.m18)}
+        ${linha("22", "PT − PL, 2022", p.m22)}
+        ${linha("26", "PT − PL, 2026", p.m26)}
+        ${linha("mud", "Mudança 2022 → 2026", p.mud, "soma")}
       </table>
       <p>2026: Lula ${pct(p.lula)} · Flávio Bolsonaro ${pct(p.flavio)} · ${mil(p.v26)} votos válidos</p>
       ${p.a22 ? `<p>Eleitores aptos: ${mil(p.a22)} em 2022 → ${mil(p.a26)} em 2026</p>` : ""}
@@ -133,7 +139,7 @@
     const m = porPid.get(pid);
     if (!m) return;
     if (centralizar) mapa.setView(m.getLatLng(), Math.max(mapa.getZoom(), 14));
-    L.popup({ maxWidth: 290, autoPanPadding: [20, 20] }).setLatLng(m.getLatLng()).setContent(popup(m.p)).openOn(mapa);
+    balao = L.popup({ maxWidth: 290, autoPanPadding: [20, 20] }).setLatLng(m.getLatLng()).setContent(popup(m.p)).openOn(mapa);
     estado.local = String(pid);
     gravarHash();
   }
@@ -259,7 +265,7 @@
     const vazio = mud ? "sem comparação (menos de 100 votos)" : aba() === "18" ? "sem seções em 2018" : "";
     const quem = estado.passo < "3" ? "locais que a enchente atingiria em 2024" : "locais dentro da área alagada";
     document.getElementById("legenda").innerHTML = `
-      <div class="tit">${ABAS[aba()].tit}</div>
+      <div class="tit">${estado.passo === "3" ? "<b>Cores: o voto de 2022</b>, a última eleição antes da enchente. " : ""}${ABAS[aba()].tit}</div>
       <div class="faixa">${cl.map((c) => `<span style="background:${c.cor}"></span>`).join("")}</div>
       <div class="rots">${cl.map((c) => `<div>${esc(c.rot)}</div>`).join("")}</div>
       ${mud ? "" : `<div class="lados"><span>← ${lados[0]}</span><span>${lados[1]} →</span></div>`}
@@ -289,6 +295,7 @@
     desenharPontos();
     desenharAreas();
     desenharSim();
+    if (estado.local && balao && mapa.hasLayer(balao)) balao.setContent(popup(porPid.get(Number(estado.local)).p));
     gravarHash();
   }
 
