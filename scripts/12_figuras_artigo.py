@@ -11,6 +11,8 @@ import sys
 from pathlib import Path
 
 import matplotlib.pyplot as plt
+import numpy as np
+from matplotlib.collections import LineCollection
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 M = importlib.import_module("03_mapas")
@@ -68,26 +70,89 @@ def fig2_tres_eleicoes(N18):
     return salvar(fig, "fig2_tres_eleicoes.png")
 
 
-def fig3_aptos(N18):
-    """Variação dos eleitores aptos antes e depois da enchente, mesmas seções."""
-    H = 4.6
-    fig = figura(H)
-    INF.legenda_grupos(fig, 0.04, 0.88, FS - 1)
-    INF.antes_depois(fig, [0.04, 0.06, 0.92, 0.72], N18, "mudanca_aptos_pct", fs=FS, unidade="%", rot_w=0.26)
-    return salvar(fig, "fig3_eleitores_aptos.png")
+# setas de deslocamento: o mesmo código visual do passo "Mudança" do mapa interativo (docs/app.js)
+SETA_INCL = np.radians(35)
+SETA_TAM = [11, 20, 32]  # px na figura de 1456 px, para até 4, 4 a 10 e mais de 10 pontos
+SETA_COR = {"pt": "#d4574a", "pl": "#3f74c2"}
+COR_VAZIO = "#a9a59c"
 
 
-def fig4_mudanca(L, vmax):
-    """Mudança 2022 → 2026 em todos os locais, com a mancha hachurada por cima: a região inteira andou para o PL,
-    dentro e fora da água (pintar só os alagados dava a impressão de que só eles mudaram)."""
+def faixa_seta(v):
+    return 0 if abs(v) < 4 else 1 if abs(v) < 10 else 2
+
+
+def caminho_seta(x, y, d, L_px, px):
+    """Haste e as duas pontas da cabeça; d = +1 (para o PL, à direita) ou −1 (para o PT). L_px em pixels da figura,
+    px = tamanho de 1 pixel na unidade do eixo (a cabeça segue a mesma regra do mapa interativo)."""
+    L, cab = L_px * px, min(9, 3 + 0.3 * L_px) * px
+    x2, y2 = x + d * L * np.cos(SETA_INCL), y + L * np.sin(SETA_INCL)
+    ang = np.arctan2(y2 - y, x2 - x)
+    return [[(x, y), (x2, y2)]] + [[(x2, y2), (x2 - cab * np.cos(ang + a), y2 - cab * np.sin(ang + a))] for a in (-0.5, 0.5)]
+
+
+def setas(ax, pts, m_por_px):
+    """Uma seta por local: os de fora apagados primeiro, os alagados fortes por cima; sem comparação, círculo vazio."""
+    for alagado, alfa, lw in [(False, 0.32, 1.4), (True, 1.0, 2.3)]:
+        g = pts[pts.ada == alagado]
+        vazios = g[~g.comparavel | g.mudanca.isna()]
+        ax.scatter(vazios.geometry.x, vazios.geometry.y, s=14, facecolors="none", edgecolors=COR_VAZIO,
+                   linewidths=1, alpha=alfa, zorder=7)
+        for cor, sinal in [("pl", -1), ("pt", 1)]:
+            h = g[g.comparavel & (np.sign(g.mudanca) == sinal)]
+            seg = [s for _, r in h.iterrows()
+                   for s in caminho_seta(r.geometry.x, r.geometry.y, -sinal, SETA_TAM[faixa_seta(r.mudanca)], m_por_px)]
+            ax.add_collection(LineCollection(seg, colors=SETA_COR[cor], linewidths=lw, alpha=alfa, capstyle="round",
+                                             zorder=8 if alagado else 7))
+
+
+def legenda_setas(fig, rect, fs):
+    """Direção, os três tamanhos, alagados × resto e a mancha, numa faixa só (desenhada em pixels da figura)."""
+    ax = MM.eixo_livre(fig, rect)
+    px = fig.bbox.width * rect[2]  # largura da faixa em px
+    u = 1 / px  # 1 px em unidades do eixo (x); no y, a faixa é mais baixa
+    ry = fig.bbox.width * rect[2] / (fig.bbox.height * rect[3])
+
+    def seta_leg(x, y, d, L, cor, alfa=1, lw=2):
+        seg = caminho_seta(x, y, d, L, u)
+        seg = [[(a, y + (b - y) * ry), (c, y + (e - y) * ry)] for (a, b), (c, e) in seg]
+        ax.add_collection(LineCollection(seg, colors=cor, linewidths=lw, alpha=alfa, capstyle="round"))
+
+    ax.text(0, 0.95, "Para onde o voto andou de 2022 para 2026 (diferença PT − PL, em pontos)", fontsize=fs,
+            color=COR["texto2"], va="top")
+    y = 0.4
+    seta_leg(0.035, y, -1, 26, SETA_COR["pt"])
+    ax.text(0.045, y + 0.08, "para o PT", fontsize=fs - 1.5, va="center")
+    seta_leg(0.14, y, 1, 26, SETA_COR["pl"])
+    ax.text(0.17, y + 0.08, "para o PL", fontsize=fs - 1.5, va="center")
+    x = 0.27
+    for L, rot in zip(SETA_TAM, ["até 4", "4 a 10", "mais de 10"]):
+        seta_leg(x, y, 1, L, SETA_COR["pl"])
+        ax.text(x + L * u * np.cos(SETA_INCL) + 0.008, y + 0.08, rot, fontsize=fs - 1.5, va="center")
+        x += 0.092
+    seta_leg(0.615, y, 1, 20, SETA_COR["pl"], lw=2.3)
+    ax.text(0.64, y + 0.08, "locais alagados", fontsize=fs - 1.5, va="center")
+    seta_leg(0.77, y, 1, 20, SETA_COR["pl"], alfa=0.32, lw=1.4)
+    ax.text(0.795, y + 0.08, "resto", fontsize=fs - 1.5, va="center")
+    M.amostra_mancha(ax, 0.85, y - 0.05, 0.035, 0.25, "areas")
+    ax.text(0.893, y + 0.08, "Área alagada\nem maio de 2024", fontsize=fs - 1.5, va="center", linespacing=1.2)
+
+
+def fig3_mudanca(L):
+    """Mudança 2022 → 2026 com setas: a região inteira andou para o PL, dentro e fora da água. Com cores de partido,
+    a mudança parecia dizer quem ganhou; a seta diz para onde o voto foi."""
+    pts = L["m_locais"]
+
     def desenhar(ax, frame):
-        MM.painel(ax, L, frame, "areas", "mud", 105, vmax, fs_lago=12)
+        M.base(ax, L, frame)
+        M.mancha(ax, L["mancha_ufrgs"], "areas")
         M.rotulos_municipios(ax, fs=11)
+        M.rotulo_lago(ax, L, frame, fs=12)
+        ax.figure.canvas.draw()  # para medir o tamanho do eixo em px
+        m_por_px = (frame[2] - frame[0]) / ax.get_window_extent().width
+        setas(ax, pts, m_por_px)
 
-    titulo = "Mudança na diferença PT − PL de 2022 para 2026, em pontos"
-    fig = mapa_com_legenda(L, desenhar, lambda f, r: MM.legenda_classes(f, r, MM.CLASSES_MUD, titulo, FS - 2,
-                                                                         "areas", mancha_x=0.8))
-    return salvar(fig, "fig4_mudanca_2022_2026.png")
+    fig = mapa_com_legenda(L, desenhar, lambda f, r: legenda_setas(f, r, FS - 2))
+    return salvar(fig, "fig3_mudanca_2022_2026.png")
 
 
 def main():
@@ -97,8 +162,7 @@ def main():
         velho.unlink()
     print(fig1_mapa(L, float(L["locais"].validos.max())))
     print(fig2_tres_eleicoes(N18))
-    print(fig3_aptos(N18))
-    print(fig4_mudanca(L, float(L["m_locais"][["validos22", "validos26"]].max().max())))
+    print(fig3_mudanca(L))
 
 
 if __name__ == "__main__":
