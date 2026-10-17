@@ -62,11 +62,57 @@ def fig1_mapa(L, vmax):
     return salvar(fig, "fig1_mapa_voto_2026.png")
 
 
+# figura 2: o mesmo desenho do cartão "Dentro × fora da área alagada" do mapa interativo (docs/app.js). Sem cor de
+# partido nem bolinhas nas linhas, para não lembrarem os pontos do mapa; o fundo diz quem venceu
+LINHAS = {"dentro": dict(color=COR["texto"], lw=3.4, ls="-", rot="Locais de votação dentro da área alagada"),
+          "fora": dict(color="#7d7b74", lw=2.8, ls=(0, (4, 2.3)), rot="Locais de votação fora da área alagada")}
+FUNDO_PT, FUNDO_PL = "#fbe9e5", "#e6eef9"
+TEXTO_PT, TEXTO_PL = "#d4574a", "#3f74c2"
+
+
 def fig2_tres_eleicoes(N18):
-    """Diferença PT − PSL/PL nas mesmas seções em 2018, 2022 e 2026, com a tabelinha dos valores embaixo."""
-    H = 7.6
+    """Vantagem do PT sobre o PSL/PL em 2018, 2022 e 2026 nas mesmas seções, dentro e fora da área alagada, com a
+    distância entre as duas linhas embaixo de cada ano."""
+    g = N18["criterios"]["ada"]
+    ys = {k: [g[k][f"margem_{a}"] for a, _, _ in INF.ANOS_18] for k in LINHAS}
+    H = 7.8
     fig = figura(H)
-    INF.tres_eleicoes(fig, [0.04, 0.34, 0.86, 0.62], N18, fs=FS - 1)
+    y0, y1, x0, x1 = -36, 8, -0.45, 2.45
+    ax = INF.eixo_livre(fig, [0.03, 0.30, 0.86, 0.50], xlim=(x0, 2.75), ylim=(y0, y1))
+    fs = FS - 1
+    # legenda em cima: uma amostra de cada linha
+    for i, (k, s) in enumerate(LINHAS.items()):
+        yl = 0.955 - i * 0.055
+        fig.add_artist(plt.Line2D([0.03, 0.09], [yl, yl], color=s["color"], lw=s["lw"], ls=s["ls"],
+                                  solid_capstyle="round"))
+        fig.text(0.105, yl, s["rot"], fontsize=fs, va="center")
+    ax.axhspan(0, y1, xmin=0, xmax=(x1 - x0) / (2.75 - x0), color=FUNDO_PT, zorder=0, lw=0)
+    ax.axhspan(y0, 0, xmin=0, xmax=(x1 - x0) / (2.75 - x0), color=FUNDO_PL, zorder=0, lw=0)
+    for x in range(3):
+        ax.plot([x, x], [y0, y1], color="white", lw=1.6, zorder=1)
+    ax.plot([x0, x1], [0, 0], color=COR["texto3"], lw=1, zorder=2)
+    ax.text(x1 + 0.04, 0, "empate", fontsize=fs - 2, color=COR["texto3"], va="center")
+    ax.text(x0 + 0.04, y1 - 1, "PT venceu", fontsize=fs - 1.5, color=TEXTO_PT, weight="bold", va="top")
+    ax.text(x1 - 0.04, y0 + 1, "PSL/PL venceu", fontsize=fs - 1.5, color=TEXTO_PL, weight="bold", ha="right",
+            va="bottom")
+    # a enchente cai entre a eleição de 2022 e a de 2026
+    ax.plot([1.6, 1.6], [y0, y1 + 1], color=COR["texto2"], lw=1.2, ls=(0, (1.5, 2.5)), zorder=2, clip_on=False)
+    ax.text(1.6, y1 + 1.6, "enchente, maio de 2024", ha="center", va="bottom", fontsize=fs - 2.5, color=COR["texto2"])
+    for k in ("fora", "dentro"):
+        s = LINHAS[k]
+        ax.plot([0, 1, 2], ys[k], color=s["color"], lw=s["lw"], ls=s["ls"], solid_capstyle="round",
+                solid_joinstyle="round", zorder=3)
+    for x, (_, ano, quem) in enumerate(INF.ANOS_18):
+        ax.text(x, y0 - 1.5, ano, ha="center", va="top", fontsize=fs + 1, weight="bold")
+        ax.annotate(quem, (x, y0 - 1.5), xytext=(0, -(fs + 8)), textcoords="offset points", ha="center", va="top",
+                    fontsize=fs - 2.5, color=COR["texto2"], linespacing=1.1, annotation_clip=False)
+        d = ys["dentro"][x] - ys["fora"][x]
+        ax.annotate(f"{abs(d):.1f}".replace(".", ","), (x, y0 - 1.5), xytext=(0, -(fs + 8) - 3.4 * (fs - 2.5)),
+                    textcoords="offset points", ha="center", va="top", fontsize=fs + 1, weight="bold",
+                    annotation_clip=False)
+    ax.annotate("distância entre\nas duas linhas,\nem pontos", (x1 + 0.04, y0 - 1.5),
+                xytext=(0, -(fs + 8) - 3.4 * (fs - 2.5)), textcoords="offset points", va="top",
+                fontsize=fs - 2.5, color=COR["texto2"], linespacing=1.1, annotation_clip=False)
     return salvar(fig, "fig2_tres_eleicoes.png")
 
 
@@ -124,17 +170,17 @@ def legenda_setas(fig, rect, fs):
     ax.text(0.045, y + 0.08, "para o PT", fontsize=fs - 1.5, va="center")
     seta_leg(0.14, y, 1, 26, SETA_COR["pl"])
     ax.text(0.17, y + 0.08, "para o PL", fontsize=fs - 1.5, va="center")
-    x = 0.27
+    x = 0.26
     for L, rot in zip(SETA_TAM, ["até 4", "4 a 10", "mais de 10"]):
         seta_leg(x, y, 1, L, SETA_COR["pl"])
         ax.text(x + L * u * np.cos(SETA_INCL) + 0.008, y + 0.08, rot, fontsize=fs - 1.5, va="center")
-        x += 0.092
-    seta_leg(0.615, y, 1, 20, SETA_COR["pl"], lw=2.3)
-    ax.text(0.64, y + 0.08, "locais alagados", fontsize=fs - 1.5, va="center")
-    seta_leg(0.77, y, 1, 20, SETA_COR["pl"], alfa=0.32, lw=1.4)
-    ax.text(0.795, y + 0.08, "resto", fontsize=fs - 1.5, va="center")
-    M.amostra_mancha(ax, 0.85, y - 0.05, 0.035, 0.25, "areas")
-    ax.text(0.893, y + 0.08, "Área alagada\nem maio de 2024", fontsize=fs - 1.5, va="center", linespacing=1.2)
+        x += 0.085
+    seta_leg(0.555, y, 1, 20, SETA_COR["pl"], lw=2.3)
+    ax.text(0.58, y + 0.08, "dentro da área alagada", fontsize=fs - 1.5, va="center")
+    seta_leg(0.752, y, 1, 20, SETA_COR["pl"], alfa=0.32, lw=1.4)
+    ax.text(0.777, y + 0.08, "fora dela", fontsize=fs - 1.5, va="center")
+    M.amostra_mancha(ax, 0.845, y - 0.05, 0.035, 0.25, "areas")
+    ax.text(0.888, y + 0.08, "Área alagada\nem maio de 2024", fontsize=fs - 1.5, va="center", linespacing=1.2)
 
 
 def fig3_mudanca(L):
