@@ -163,9 +163,29 @@
   // Na mudança, cor de partido parecia dizer quem ganhou. Cada local vira uma seta que aponta para onde o voto andou
   // (→ PL, ← PT): três tamanhos só e uma cor por direção; com o destaque, alagados fortes e o resto apagado.
   // Escolhida em protótipo (branch prototipo/setas-mudanca) contra setas de comprimento contínuo e transição de cor.
-  const SETA = { incl: (35 * Math.PI) / 180, tam: [7, 13, 21], pt: "#d4574a", pl: "#3f74c2" };
+  const SETA = { incl: (35 * Math.PI) / 180, tam: [7, 13, 21], pt: "#d4574a", pl: "#3f74c2", celula: 14, tudo: 10 };
   const faixaSeta = (v) => (Math.abs(v) < 4 ? 0 : Math.abs(v) < 10 ? 1 : 2); // até 4, 4 a 10, mais de 10 pontos
-  let telaSetas, ctxSetas;
+  let telaSetas, ctxSetas, setasNoMapa = [];
+
+  // Com o zoom baixo (celular) os 1.239 locais não cabem: as setas viram uma mancha. Abaixo do zoom SETA.tudo a tela só
+  // comporta uma seta por célula de SETA.celula px, e a grade se desfaz até o zoom SETA.tudo, de onde todas aparecem.
+  // A célula é por grupo (alagado ou não, com o destaque ligado) e por direção, então nenhum dos dois grupos some e o
+  // PT, que é pouco e concentrado no centro, não é engolido pelos vizinhos azuis. A seta de cada célula é a do maior
+  // local (uma seta real, com popup); a média ponderada da célula foi testada e ficava praticamente igual.
+
+  function agruparSetas() {
+    const c = SETA.celula * Math.max(0, Math.min(1, SETA.tudo - mapa.getZoom()));
+    const dest = estado.dest === "1", celulas = new Map(), lista = [];
+    for (const m of pontos) { // do maior para o menor: o primeiro de cada célula é o de mais votos
+      const p = m.p, { x, y } = mapa.latLngToContainerPoint(m.getLatLng()), seta = { x, y, mud: p.mud, ada: p.ada, p };
+      if (c < 3) { lista.push(seta); continue; }
+      const q = mapa.project(m.getLatLng()); // pixels do mundo: a grade fica parada quando o mapa é arrastado
+      const dir = p.mud == null ? 2 : p.mud < 0 ? 1 : 0;
+      const chave = `${Math.floor(q.x / c)},${Math.floor(q.y / c)},${dest && p.ada ? 1 : 0},${dir}`;
+      if (!celulas.has(chave)) { celulas.set(chave, seta); lista.push(seta); }
+    }
+    return lista;
+  }
 
   function caminhoSeta(x, y, dir, L) {
     const x2 = x + dir * L * Math.cos(SETA.incl), y2 = y - L * Math.sin(SETA.incl);
@@ -188,21 +208,20 @@
     ctx.lineCap = "round";
     const esc = Math.max(0.8, Math.min(2.2, Math.pow(1.25, mapa.getZoom() - 10)));
     const dest = estado.dest === "1";
+    setasNoMapa = agruparSetas();
     for (const alagado of [false, true]) { // os de fora primeiro, os alagados por cima
-      for (const m of pontos) {
-        const p = m.p;
-        if (p.ada !== alagado) continue;
-        const { x, y } = mapa.latLngToContainerPoint(m.getLatLng());
-        ctx.globalAlpha = dest && !p.ada ? 0.3 : 1;
-        if (p.mud == null) { // sem comparação: um círculo vazio, como nos outros passos
+      for (const { x, y, mud, ada } of setasNoMapa) {
+        if (ada !== alagado) continue;
+        ctx.globalAlpha = dest && !ada ? 0.3 : 1;
+        if (mud == null) { // sem comparação: um círculo vazio, como nos outros passos
           ctx.strokeStyle = COR_VAZIO; ctx.lineWidth = 1.2;
           ctx.beginPath(); ctx.arc(x, y, 3, 0, 2 * Math.PI); ctx.stroke();
           continue;
         }
-        ctx.strokeStyle = p.mud < 0 ? SETA.pl : SETA.pt; // PT − PL caiu → andou para o PL → seta para a direita
-        ctx.lineWidth = dest && p.ada ? 2.2 : 1.5;
+        ctx.strokeStyle = mud < 0 ? SETA.pl : SETA.pt; // PT − PL caiu → andou para o PL → seta para a direita
+        ctx.lineWidth = dest && ada ? 2.2 : 1.5;
         ctx.beginPath();
-        for (const [a, b, c, d] of caminhoSeta(x, y, p.mud < 0 ? 1 : -1, SETA.tam[faixaSeta(p.mud)] * esc)) {
+        for (const [a, b, c, d] of caminhoSeta(x, y, mud < 0 ? 1 : -1, SETA.tam[faixaSeta(mud)] * esc)) {
           ctx.moveTo(a, b); ctx.lineTo(c, d);
         }
         ctx.stroke();
@@ -217,9 +236,9 @@
   mapa.on("click", (e) => {
     if (aba() !== "mud") return;
     let melhor = null, dmin = 12;
-    for (const m of pontos) {
-      const d = mapa.latLngToContainerPoint(m.getLatLng()).distanceTo(e.containerPoint);
-      if (d < dmin) { dmin = d; melhor = m; }
+    for (const s of setasNoMapa) { // só as que estão desenhadas
+      const d = L.point(s.x, s.y).distanceTo(e.containerPoint);
+      if (d < dmin) { dmin = d; melhor = s; }
     }
     if (melhor) abrirLocal(melhor.p.pid, false);
   });
@@ -396,7 +415,11 @@
     const painel = document.getElementById("painel");
     const pad = celular ? { paddingTopLeft: [10, 30], paddingBottomRight: [10, painel.offsetHeight + 10] }
       : { paddingTopLeft: [painel.offsetWidth + 30, 20], paddingBottomRight: [20, 20] };
+    // no celular o zoom inteiro desperdiça até metade do espaço (o 8,9 ideal cai para 8): ali o enquadramento é fracionário
+    const snap = mapa.options.zoomSnap;
+    if (celular) mapa.options.zoomSnap = 0;
     mapa.fitBounds(munBounds.get(estado.mun) || L.featureGroup(pontos).getBounds(), pad);
+    mapa.options.zoomSnap = snap;
   }
 
   function ligarControles() {

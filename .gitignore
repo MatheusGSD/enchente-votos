@@ -6,3 +6,6 @@ __pycache__/
 
 # trava do Office quando o pptx está aberto
 ~$*
+
+# cópias de trabalho dos subagentes do Claude Code
+.claude/
