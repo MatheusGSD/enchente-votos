@@ -57,24 +57,29 @@ def legenda(fig, x, y, fs):
     ax.axis("off")
     X, Y = x * fig.bbox.width, y * fig.bbox.height
 
-    def seta(px, cor, d=1, alfa=1, lw=2.2):
-        seg = A.caminho_seta(px, Y - 6, d, 22, 1)
+    def seta(px, y, cor, d=1, alfa=1, lw=2.2):
+        dx = 22 * np.cos(A.SETA_INCL)  # a seta ocupa [px, px + dx] nos dois sentidos
+        seg = A.caminho_seta(px + (dx if d < 0 else 0), y - 6, d, 22, 1)
         ax.add_collection(LineCollection(seg, colors=cor, linewidths=lw, alpha=alfa, capstyle="round"))
 
-    itens = [(lambda p: seta(p, A.SETA_COR["pt"], -1), "para o PT", 18),
-             (lambda p: seta(p, A.SETA_COR["pl"]), "para o PL", 0),
-             (lambda p: seta(p, A.SETA_COR["pl"]), "dentro da área alagada", 0),
-             (lambda p: seta(p, A.SETA_COR["pl"], alfa=0.32, lw=1.4), "fora dela", 0)]
+    # colunas por assunto (direção, dentro × fora), em duas linhas; cada coluna começa onde a anterior termina
+    colunas = [[(dict(cor=A.SETA_COR["pt"], d=-1), "para o PT"), (dict(cor=A.SETA_COR["pl"]), "para o PL")],
+               [(dict(cor=A.SETA_COR["pl"]), "dentro da área alagada"),
+                (dict(cor=A.SETA_COR["pl"], alfa=0.32, lw=1.4), "fora dela")]]
+    linhas = [Y, Y - 32]
     px = X
-    for i, (desenha, rot, recuo) in enumerate(itens):
-        if i == 2:  # segunda linha
-            px, Y = X, Y - 34
-        desenha(px + recuo)
-        t = ax.text(px + 30, Y, rot, fontsize=fs, color=COR["texto2"], va="center")
-        fig.canvas.draw()
-        px = t.get_window_extent().x1 + 28
-    M.amostra_mancha(ax, px, Y - 9, 26, 18, "areas")
-    ax.text(px + 34, Y, "área alagada em maio de 2024", fontsize=fs, color=COR["texto2"], va="center")
+    for col in colunas:
+        fim = px
+        for y, (k, rot) in zip(linhas, col):
+            seta(px, y, **k)
+            t = ax.text(px + 28, y, rot, fontsize=fs, color=COR["texto2"], va="center_baseline")
+            fig.canvas.draw()
+            fim = max(fim, t.get_window_extent().x1)
+        px = fim + 34
+    meio = sum(linhas) / 2
+    M.amostra_mancha(ax, px, meio - 10, 26, 20, "areas")
+    ax.text(px + 36, meio, "área alagada\nem maio de 2024", fontsize=fs, color=COR["texto2"], va="center",
+            linespacing=1.25)
 
 
 def main():
