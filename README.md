@@ -35,6 +35,7 @@ Cada seção eleitoral é a mesma nas três eleições (mesmo município, zona e
 | `11_incerteza.py` | Intervalo de 95% por reamostragem das zonas eleitorais |
 | `12_figuras_artigo.py` | Figuras limpas para o artigo (`saida/artigo/`) |
 | `13_exportar_web.py` | Dados do mapa interativo (`docs/dados/`) |
+| `14_imagem_x.py` | Cartão para o X (`saida/imagem_x.png`) |
 
 Para rodar do zero, baixe os dados brutos para `dados/` (fora do git, cerca de 1,4 GB) e rode os scripts em ordem.
 Precisa de Python com geopandas, matplotlib e shapely 2.1 ou mais novo.

@@ -9,3 +9,6 @@ __pycache__/
 
 # cópias de trabalho dos subagentes do Claude Code
 .claude/
+
+# rascunhos pessoais (textos para redes)
+rascunhos/
