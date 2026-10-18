@@ -149,6 +149,8 @@ def setas(ax, pts, m_por_px):
                    for s in caminho_seta(r.geometry.x, r.geometry.y, -sinal, SETA_TAM[faixa_seta(r.mudanca)], m_por_px)]
             ax.add_collection(LineCollection(seg, colors=SETA_COR[cor], linewidths=lw, alpha=alfa, capstyle="round",
                                              zorder=8 if alagado else 7))
+    for t in ax.texts:  # nomes de município e do lago por cima das setas, com o contorno claro de 03_mapas
+        t.set_zorder(9)
 
 
 def legenda_setas(fig, rect, fs):

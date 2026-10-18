@@ -50,7 +50,7 @@ def mapa(fig, L):
 
 
 def legenda(fig, x, y, fs):
-    """Direção da seta, alagados × resto e a mancha, em pixels da figura."""
+    """Direção da seta, dentro × fora da área alagada e a mancha, em pixels da figura."""
     ax = fig.add_axes([0, 0, 1, 1], facecolor="none")
     ax.set_xlim(0, fig.bbox.width)
     ax.set_ylim(0, fig.bbox.height)
