@@ -4,7 +4,7 @@ A enchente de maio de 2024 mudou o voto para presidente de quem vota nas áreas 
 1º turno de 2018, 2022 e 2026, local de votação por local de votação, com a mancha da enchente em 42 municípios da
 Grande Porto Alegre.
 
-**Mapa interativo:** https://matheusgsd.github.io/enchente-votos/
+**Mapa interativo:** https://dalmolin.dev/enchente-votos/
 
 ## O que os números mostram
 
