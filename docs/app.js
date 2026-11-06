@@ -279,8 +279,7 @@
 
   // ---------- os cinco passos ----------
   function textoPasso() {
-    const [d, f] = [resumo.linhas.dentro, resumo.linhas.fora];
-    const dist = (i) => sinal(d[i] - f[i]);
+    const dist = (i) => sinal(resumo.dist[i]);
     const D = resumo.dentro, F = resumo.fora, [a, b] = resumo.ic_mud;
     return {
       "1": ["2018, antes da enchente",
@@ -324,7 +323,7 @@
     const amostra = (g, yy) => `<line x1="0" x2="28" y1="${yy - 4}" y2="${yy - 4}" class="${LINHAS[g].classe}"/>
       <text x="36" y="${yy}" class="g-leg">${LINHAS[g].rot}</text>`;
     const anosRot = ["2018", "2022", "2026"].map((t, i) => `<text x="${xs[i]}" y="${base + 14}" class="g-ano${i < anos ? "" : " g-futuro"}">${t}</text>`);
-    const dists = L18.dentro.slice(0, anos).map((v, i) => `<text x="${xs[i]}" y="${base + 32}" class="g-dist">${fmt1(Math.abs(v - L18.fora[i]))}</text>`);
+    const dists = L18.dentro.slice(0, anos).map((v, i) => `<text x="${xs[i]}" y="${base + 32}" class="g-dist">${fmt1(Math.abs(resumo.dist[i]))}</text>`);
     const enchente = estado.passo >= "3"
       ? `<line x1="${xEnchente}" x2="${xEnchente}" y1="${topo - 2}" y2="${base}" class="g-enchente${estado.passo === "3" ? " g-agora" : ""}"/>
          <text x="${xEnchente}" y="${topo - 5}" class="g-enchente-rot">enchente</text>` : "";

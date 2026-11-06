@@ -117,9 +117,10 @@ def main():
             sorteios[n] = np.stack([np.bincount(r, minlength=n) for r in idx]).astype(float)
         est_g, est_c = medir(som, f, a, b, peso, np.ones((1, n)))
         bg, bc = medir(som, f, a, b, peso, sorteios[n])
-        ic = lambda x: [round(float(v), 2) for v in np.nanpercentile(x, [2.5, 97.5])]
-        out[k] = {"rotulo": rot, "unidade": unid, "estimativa": round(float(est_g[0]), 2), "ic95": ic(bg),
-                  "dentro_cidades": round(float(est_c[0]), 2), "ic95_cidades": ic(bc)}
+        # 3 casas: com 2, o −2,349 virava −2,35 e depois −2,4 no texto e no mapa (dois arredondamentos)
+        ic = lambda x: [round(float(v), 3) for v in np.nanpercentile(x, [2.5, 97.5])]
+        out[k] = {"rotulo": rot, "unidade": unid, "estimativa": round(float(est_g[0]), 3), "ic95": ic(bg),
+                  "dentro_cidades": round(float(est_c[0]), 3), "ic95_cidades": ic(bc)}
         print(f"{rot:36s} {est_g[0]:+6.2f} [{out[k]['ic95'][0]:+.2f}, {out[k]['ic95'][1]:+.2f}]  dentro das cidades "
               f"{est_c[0]:+6.2f} [{out[k]['ic95_cidades'][0]:+.2f}, {out[k]['ic95_cidades'][1]:+.2f}]")
     numeros = {"medidas": out, "b": B, "semente": SEMENTE, "zonas": len(sm.zonas),

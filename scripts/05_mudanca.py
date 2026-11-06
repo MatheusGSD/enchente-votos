@@ -49,11 +49,14 @@ def resumo(df):
     for a in ("22", "26"):
         r[f"pct_lula_{a}"] = round(100 * s[f"lula{a}"] / s[f"validos{a}"], 2)
         r[f"pct_n22_{a}"] = round(100 * s[f"n22_{a}"] / s[f"validos{a}"], 2)
-        r[f"margem_{a}"] = round(r[f"pct_lula_{a}"] - r[f"pct_n22_{a}"], 2)
+        # direto das contagens e com 3 casas, como em 10_tendencia_2018.py: subtrair os % já arredondados somava
+        # dois arredondamentos (a mancha do governo com 500 m dava 1,07 em vez de 1,054)
+        r[f"margem_{a}"] = round(100 * (s[f"lula{a}"] - s[f"n22_{a}"]) / s[f"validos{a}"], 3)
     r["aptos_22"], r["aptos_26"] = int(s.aptos22), int(s.aptos26p)
     r["comparecimento_22"] = round(100 * s.comp22 / s.aptos22, 2)
     r["comparecimento_26"] = round(100 * s.comp26p / s.aptos26p, 2)
-    r["mudanca_margem"] = round(r["margem_26"] - r["margem_22"], 2)
+    margem = {a: 100 * (s[f"lula{a}"] - s[f"n22_{a}"]) / s[f"validos{a}"] for a in ("22", "26")}
+    r["mudanca_margem"] = round(margem["26"] - margem["22"], 3)
     r["mudanca_lula"] = round(r["pct_lula_26"] - r["pct_lula_22"], 2)
     r["mudanca_n22"] = round(r["pct_n22_26"] - r["pct_n22_22"], 2)
     r["mudanca_aptos_pct"] = round(100 * (s.aptos26p / s.aptos22 - 1), 2)

@@ -9,10 +9,10 @@ Grande Porto Alegre.
 ## O que os números mostram
 
 - **O voto andou igual dentro e fora da água.** De 2022 para 2026, a diferença PT − PL caiu 8,6 pontos dentro da
-  área alagada e 7,9 fora dela. A diferença entre os dois (−0,8 ponto, intervalo de 95% de −2,4 a +1,5) é menor que
+  área alagada e 7,9 fora dela. A diferença entre os dois (−0,8 ponto, intervalo de 95% de −2,3 a +1,5) é menor que
   a margem de acaso.
 - **A distância entre os dois grupos já existia antes da água.** Nas mesmas seções, os locais dentro da área
-  alagada votaram 3,3 pontos mais no PT que os de fora em 2018, 3,8 em 2022 e 2,9 em 2026: é o perfil desses bairros, não efeito da
+  alagada votaram 3,3 pontos mais no PT que os de fora em 2018, 3,7 em 2022 e 2,9 em 2026: é o perfil desses bairros, não efeito da
   enchente.
 
 É uma comparação descritiva: mostra onde o voto foi diferente, não mede o efeito da enchente.
@@ -44,10 +44,12 @@ Precisa de Python com geopandas, matplotlib e shapely 2.1 ou mais novo.
 
 - TSE, [dados abertos](https://dadosabertos.tse.jus.br/): votação por seção e locais de votação, 1º turno de 2018,
   2022 e 2026.
-- UFRGS/IPH, Possantti et al., Banco de dados das cheias da RH do Guaíba v1.4: área diretamente afetada em 6 e
-  8/5/2024 e simulação do Guaíba a 5,30 m em Porto Alegre (CC BY 4.0). No mapa interativo, o contorno foi
-  simplificado.
-- IBGE: malha municipal 2025 e setores do Censo 2022. SEMA-RS: base cartográfica 1:25.000.
+- UFRGS, Possantti et al., [Banco de dados das cheias na Região Hidrográfica do Lago Guaíba em Maio de 2024, v1.4](https://doi.org/10.5281/zenodo.14617475):
+  área diretamente afetada em 6 e 8/5/2024 e simulação do Guaíba a 5,30 m em Porto Alegre (CC BY 4.0). No mapa
+  interativo, o contorno foi simplificado.
+- Governo do RS/SPGG: área inundada em 23/5/2024 (só para conferir o resultado com outra mancha).
+- IBGE: malha municipal 2025 e setores do Censo 2022. SEMA-RS: base cartográfica 1:25.000 (BCRS25), dos insumos do
+  banco da UFRGS.
 
 ## Licença
 

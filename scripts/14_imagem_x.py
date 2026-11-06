@@ -86,7 +86,7 @@ def main():
     L, _, _ = MM.carregar()
     R = json.loads((M.RAIZ / "docs/dados/resumo.json").read_text(encoding="utf-8"))
     d, f = R["dentro"], R["fora"]
-    dist = [abs(a - b) for a, b in zip(R["linhas"]["dentro"], R["linhas"]["fora"])]
+    dist = [abs(x) for x in R["dist"]]  # já arredondada no 13; a diferença das linhas daria 3,8 em 2022
 
     fig = plt.figure(figsize=(W, H), dpi=DPI, facecolor=COR["fundo"])
     mapa(fig, L)

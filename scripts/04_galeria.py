@@ -477,8 +477,8 @@ Na linha ponderada, cada local entra no grupo "dentro" na proporção dos morado
 <div class=scroll><table>{CAB}{crit}</table></div>
 
 <h3>Só Porto Alegre: o número muda com o critério?</h3>
-<p class=nota>A mancha de satélite (6 e 8/5) quase não pega o Centro Histórico, a Cidade Baixa e o Menino Deus, onde a água
-entrou na cidade. A simulação de 5,30 m da UFRGS é uma estimativa feita só para Porto Alegre.</p>
+<p class=nota>A mancha de satélite (6 e 8/5) cobre 39% da área da Cidade Baixa, 41% do Menino Deus e 48% do Centro Histórico;
+a simulação de 5,30 m, 61%, 61% e 53%. A simulação da UFRGS é uma estimativa feita só para Porto Alegre.</p>
 <div class=scroll><table>{CAB}{crit_poa}</table></div>
 
 <h3>Por município com algum local alagado (mancha UFRGS, ponto dentro)</h3>

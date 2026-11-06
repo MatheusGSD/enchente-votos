@@ -101,11 +101,13 @@ def resumo():
     r = {}
     for g in ("dentro", "fora"):
         r[g] = {"locais": N[g]["locais"], "aptos": N[g]["aptos"],
-                "m26": round(N[g]["pct_lula"] - N[g]["pct_flavio"], 1),
+                "m26": round(100 * (N[g]["lula"] - N[g]["flavio"]) / N[g]["validos"], 1),  # das contagens, sem % arredondado
                 "m22": round(NM[g]["margem_22"], 1), "mud": round(NM[g]["mudanca_margem"], 1),
                 "m18": round(N18[g]["margem_18"], 1)}
     # linha do tempo do painel: as três eleições nas seções que existem em todas (os números da figura 2 do artigo)
     r["linhas"] = {g: [round(N18[g][f"margem_{a}"], 1) for a in ("18", "22", "26")] for g in ("dentro", "fora")}
+    # distância dentro − fora já arredondada aqui: a diferença das linhas (1 casa) daria 3,8 em 2022, não 3,7
+    r["dist"] = [round(N18["dentro"][f"margem_{a}"] - N18["fora"][f"margem_{a}"], 1) for a in ("18", "22", "26")]
     r["ic_mud"] = NI["voto_22_26"]["ic95"]
     r["dif_mud"] = NI["voto_22_26"]["estimativa"]
     return r

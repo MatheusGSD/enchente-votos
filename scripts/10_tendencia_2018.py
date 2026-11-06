@@ -54,7 +54,9 @@ def resumo(df):
         v, comp, aptos = s[f"validos{a}"], s[f"comp{a}"], s[f"aptos{a}"]
         r[f"pct_pt_{a}"] = round(100 * s[f"pt{a}"] / v, 2)
         r[f"pct_dir_{a}"] = round(100 * s[f"dir{a}"] / v, 2)
-        r[f"margem_{a}"] = round(r[f"pct_pt_{a}"] - r[f"pct_dir_{a}"], 2)
+        # direto das contagens e com 3 casas: subtrair os % já arredondados somava dois arredondamentos e a
+        # distância dentro − fora de 2022 (3,746) saía como 3,8 na figura 2 e no mapa
+        r[f"margem_{a}"] = round(100 * (s[f"pt{a}"] - s[f"dir{a}"]) / v, 3)
         r[f"aptos_{a}"] = int(aptos)
         r[f"abstencao_{a}"] = round(100 - 100 * comp / aptos, 2)
         r[f"pct_brancos_{a}"] = round(100 * s[f"brancos{a}"] / comp, 2)
